@@ -1,14 +1,15 @@
 SET(LIB_NAME parsing_utilites)
 
-file(GLOB_RECURSE HEADERS "lexer/*.hpp"
-			  "syntax_analyser/*.hpp")
+file(GLOB_RECURSE LIB_HEADERS "algorithms/*.hpp"
+                          "grammar/*.hpp")
 
-file(GLOB_RECURSE SOURCES "lexer/*.cpp"
-			  "syntax_analyser/*.hpp")
+file(GLOB_RECURSE LIB_SOURCES "algorithms/*.cpp"
+                          "grammar/*.cpp")
+
 
 add_library(${LIB_NAME} SHARED
-		${SOURCES}
-		${HEADERS})
+                ${LIB_SOURCES}
+                ${LIB_HEADERS})
 
 set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 14)
 
@@ -18,7 +19,23 @@ target_include_directories(${LIB_NAME}
 	./
 )
 
-add_executable(parser main.cpp)
+file(GLOB_RECURSE HEADERS "lexer/*.hpp"
+                          "structures/*.hpp"
+                          "syntax_analyser/*.hpp"
+                          "lifecycle/*.hpp")
+
+file(GLOB_RECURSE SOURCES "lexer/*.cpp"
+                          "structures/*.cpp"
+                          "syntax_analyser/*.cpp"
+                          "lifecycle/*.cpp")
+
+
+add_executable(parser main.cpp ${SOURCES})
+
+target_include_directories(parser
+    PUBLIC
+    ./
+)
 
 set_property(TARGET parser PROPERTY CXX_STANDARD 14)
 
