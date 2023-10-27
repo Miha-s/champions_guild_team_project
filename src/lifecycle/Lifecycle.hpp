@@ -1,10 +1,11 @@
 #ifndef LIFECYCLE_HPP
 #define LIFECYCLE_HPP
 
-class Lifecycle {
+class Lifecycle
+{
 public:
     Lifecycle( char** argv, int argc );
     int run( );
 };
 
-#endif // LIFECYCLE_HPP
+#endif  // LIFECYCLE_HPP

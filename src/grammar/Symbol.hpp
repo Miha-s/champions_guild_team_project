@@ -10,8 +10,14 @@ struct Symbol
     bool is_terminal;
 
     Symbol( bool is_terminal )
-        : is_terminal{ true }
+        : is_terminal{ is_terminal }
     {
+    }
+
+    bool
+    is_valid( ) const
+    {
+        return id != INVALID_ID;
     }
 
     bool

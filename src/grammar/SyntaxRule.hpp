@@ -9,7 +9,7 @@
 class SyntaxRule
 {
 public:
-    template <typename... Symbols>
+    template < typename... Symbols >
     SyntaxRule( SymbolId id, NonTerminal left_side, const Symbols&... right_side )
         : m_id{ id }
         , m_left_side{ left_side }
@@ -17,10 +17,24 @@ public:
     {
     }
 
+    SymbolId
+    id( ) const
+    {
+        return m_id;
+    }
+
+    bool
+    is_valid( ) const
+    {
+        return m_id != INVALID_ID && m_left_side.is_valid( );
+    }
+
 private:
     SymbolId m_id;
     NonTerminal m_left_side;
-    Symbols  m_right_side;
+    Symbols m_right_side;
 };
+
+static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, INVALID_NON_TERMINAL };
 
 #endif  // SYNTAXRULE_H

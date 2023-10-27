@@ -1,10 +1,12 @@
 SET(LIB_NAME parsing_utilites)
 
 file(GLOB_RECURSE LIB_HEADERS "algorithms/*.hpp"
-                          "grammar/*.hpp")
+                              "grammar/*.hpp"
+                              "structures/*.hpp")
 
 file(GLOB_RECURSE LIB_SOURCES "algorithms/*.cpp"
-                          "grammar/*.cpp")
+                              "grammar/*.cpp"
+                              "structures/*.cpp")
 
 
 add_library(${LIB_NAME} SHARED
@@ -20,12 +22,10 @@ target_include_directories(${LIB_NAME}
 )
 
 file(GLOB_RECURSE HEADERS "lexer/*.hpp"
-                          "structures/*.hpp"
                           "syntax_analyser/*.hpp"
                           "lifecycle/*.hpp")
 
 file(GLOB_RECURSE SOURCES "lexer/*.cpp"
-                          "structures/*.cpp"
                           "syntax_analyser/*.cpp"
                           "lifecycle/*.cpp")
 

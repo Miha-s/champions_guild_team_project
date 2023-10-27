@@ -3,7 +3,8 @@
 
 #include <string>
 
-using SymbolId = int;
+using SymbolId = std::size_t;
+
 SymbolId INVALID_ID = -1;
 
 using StringType = std::string;

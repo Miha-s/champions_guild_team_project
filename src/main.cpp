@@ -1,8 +1,9 @@
 
 #include "grammar/Grammar.hpp"
 
-
-int main() {
+int
+main( )
+{
     Terminal a;
     Terminal b;
     NonTerminal c;
@@ -10,9 +11,8 @@ int main() {
 
     Grammar golang;
 
-    golang.add_rule(c, a, b);
-    golang.add_rule(c, c, c, c, b, a, a, c, d, d, a);
+    golang.add_rule( c, a, b );
+    golang.add_rule( c, c, c, c, b, a, a, c, d, d, a );
 
-
-	return 0;
+    return 0;
 }

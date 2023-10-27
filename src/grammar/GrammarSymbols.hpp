@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 #include "Countable.hpp"
@@ -13,24 +14,55 @@
 class GrammarSymbols
 {
     Counter m_counter;
-    std::vector< NonTerminal > m_non_terminals;
-    std::vector< Terminal > m_terminals;
+    using NonTerminalsSet = std::unordered_set< NonTerminal, NonTerminalHash >;
+    using TerminalsSet = std::unordered_set< Terminal, TerminalHash >;
+    NonTerminalsSet m_non_terminals;
+    TerminalsSet m_terminals;
 
 public:
     GrammarSymbols( )
     {
     }
 
-    const std::vector< NonTerminal >&
+    const NonTerminalsSet&
     non_terminals( )
     {
         return m_non_terminals;
     }
 
-    const std::vector< Terminal >&
+    const TerminalsSet&
     terminals( )
     {
         return m_terminals;
+    }
+
+    Terminal
+    get_terminal( TerminalGroup group, TerminalSubgroup subgroup ) const
+    {
+        auto it = std::find( m_terminals.cbegin( ),
+                             m_terminals.cend( ),
+                             Terminal{ group, subgroup, "" } );
+        if ( it != m_terminals.cend( ) )
+        {
+            return *it;
+        }
+
+        return INVALID_TERMINAL;
+    }
+
+    NonTerminal
+    get_non_terminal( NonTerminalGroup group, NonTerminalSubgroup subgroup ) const
+    {
+        auto it = std::find( m_non_terminals.cbegin( ),
+                             m_non_terminals.cend( ),
+                             NonTerminal{ group, subgroup } );
+
+        if ( it != m_non_terminals.cend( ) )
+        {
+            return *it;
+        }
+
+        return INVALID_NON_TERMINAL;
     }
 
     template < class... Symbols >
@@ -59,7 +91,7 @@ public:
         if ( it == m_non_terminals.end( ) )
         {
             symbol.id = m_counter.get_next_id( );
-            m_non_terminals.push_back( symbol );
+            m_non_terminals.insert( symbol );
         }
         else
         {
@@ -77,7 +109,7 @@ public:
         if ( it != m_terminals.end( ) )
         {
             symbol.id = m_counter.get_next_id( );
-            m_terminals.push_back( symbol );
+            m_terminals.insert( symbol );
         }
         else
         {

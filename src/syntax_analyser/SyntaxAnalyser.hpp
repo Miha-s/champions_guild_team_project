@@ -1,9 +1,11 @@
 #ifndef SYNTAXANALYSER_HPP
 #define SYNTAXANALYSER_HPP
 
-class SyntaxAnalyser {
+class SyntaxAnalyser
+{
     using FailedState = int;
     using Result = int;
+
 public:
     virtual void process( ) = 0;
     virtual bool successfully_parsed( ) const = 0;
@@ -11,4 +13,4 @@ public:
     virtual Result get_result( ) const = 0;
 };
 
-#endif // SYNTAXANALYSER_HPP
+#endif  // SYNTAXANALYSER_HPP
