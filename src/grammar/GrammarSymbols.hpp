@@ -51,11 +51,11 @@ public:
     }
 
     NonTerminal
-    get_non_terminal( NonTerminalGroup group, NonTerminalSubgroup subgroup ) const
+    get_non_terminal( NonTerminalType type ) const
     {
         auto it = std::find( m_non_terminals.cbegin( ),
                              m_non_terminals.cend( ),
-                             NonTerminal{ group, subgroup } );
+                             NonTerminal{ type } );
 
         if ( it != m_non_terminals.cend( ) )
         {

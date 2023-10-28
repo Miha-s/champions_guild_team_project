@@ -5,17 +5,16 @@ NonTerminal::NonTerminal( )
 {
 }
 
-NonTerminal::NonTerminal( NonTerminalGroup group, NonTerminalSubgroup subgroup )
+NonTerminal::NonTerminal( NonTerminalType group )
     : Symbol{ false }
-    , type{ group, subgroup }
+    , type{ group }
 {
 }
 
 bool
 NonTerminal::is_valid( ) const
 {
-    return type.group != NonTerminalGroup::INVALID
-           && type.sub_group != NonTerminalSubgroup::INVALID;
+    return type != NonTerminalType::INVALID;
 };
 
 bool

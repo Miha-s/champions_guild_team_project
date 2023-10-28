@@ -30,9 +30,9 @@ public:
     }
 
     NonTerminal
-    create( NonTerminalGroup group, NonTerminalSubgroup subgroup ) const
+    create( NonTerminalType type ) const
     {
-        return m_grammar_symbols.get_non_terminal( group, subgroup );
+        return m_grammar_symbols.get_non_terminal( type );
     }
 
     SyntaxRule

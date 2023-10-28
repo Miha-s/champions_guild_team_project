@@ -5,17 +5,15 @@
 #include "Symbol.hpp"
 #include "SymbolType.hpp"
 
-enum class NonTerminalGroup : SymbolId;
-
-enum class NonTerminalSubgroup : SymbolId;
+enum class NonTerminalType : SymbolId;
 
 struct NonTerminal : public Symbol
 {
-    SymbolType< NonTerminalGroup, NonTerminalSubgroup > type;
+    NonTerminalType type;
 
     NonTerminal( );
 
-    NonTerminal( NonTerminalGroup group, NonTerminalSubgroup subgroup );
+    NonTerminal( NonTerminalType type );
 
     bool is_valid( ) const;
 
@@ -27,24 +25,16 @@ struct NonTerminalHash
     std::size_t
     operator( )( const NonTerminal& non_terminal ) const
     {
-        return std::hash< std::size_t >( )(
-                static_cast< std::size_t >( non_terminal.type.group )
-                ^ static_cast< std::size_t >( non_terminal.type.sub_group ) );
+        return std::hash< std::size_t >( )( static_cast< std::size_t >( non_terminal.type ) );
     }
 };
 
-enum class NonTerminalGroup : SymbolId
+enum class NonTerminalType : SymbolId
 {
     INVALID
 };
 
-enum class NonTerminalSubgroup : SymbolId
-{
-    INVALID
-};
-
-static const NonTerminal INVALID_NON_TERMINAL =
-        NonTerminal{ NonTerminalGroup::INVALID, NonTerminalSubgroup::INVALID };
+static const NonTerminal INVALID_NON_TERMINAL = NonTerminal{ NonTerminalType::INVALID };
 
 using NonTerminals = std::vector< NonTerminal >;
 #endif  // NONTERMINAL_HPP
