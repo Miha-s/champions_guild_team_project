@@ -41,7 +41,7 @@ public:
     {
         auto it = std::find( m_terminals.cbegin( ),
                              m_terminals.cend( ),
-                             Terminal{ group, subgroup, "" } );
+                             Terminal{ group, subgroup } );
         if ( it != m_terminals.cend( ) )
         {
             return *it;
@@ -106,7 +106,7 @@ public:
                                 m_terminals.end( ),
                                 [ &symbol ]( const Terminal& sym ) { return sym == symbol; } );
 
-        if ( it != m_terminals.end( ) )
+        if ( it == m_terminals.end( ) )
         {
             symbol.id = m_counter.get_next_id( );
             m_terminals.insert( symbol );

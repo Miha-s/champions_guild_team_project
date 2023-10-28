@@ -13,24 +13,13 @@ struct NonTerminal : public Symbol
 {
     SymbolType< NonTerminalGroup, NonTerminalSubgroup > type;
 
-    NonTerminal( )
-        : Symbol{ false }
-    {
-    }
+    NonTerminal( );
 
-    NonTerminal( NonTerminalGroup group, NonTerminalSubgroup subgroup )
-        : Symbol{ false }
-        , type{ group, subgroup }
-    {
-    }
+    NonTerminal( NonTerminalGroup group, NonTerminalSubgroup subgroup );
 
     bool is_valid( ) const;
 
-    bool
-    operator==( const NonTerminal& other ) const
-    {
-        return type == other.type;
-    }
+    bool operator==( const NonTerminal& other ) const;
 };
 
 struct NonTerminalHash
@@ -53,13 +42,6 @@ enum class NonTerminalSubgroup : SymbolId
 {
     INVALID
 };
-
-bool
-NonTerminal::is_valid( ) const
-{
-    return type.group != NonTerminalGroup::INVALID
-           && type.sub_group != NonTerminalSubgroup::INVALID;
-}
 
 static const NonTerminal INVALID_NON_TERMINAL =
         NonTerminal{ NonTerminalGroup::INVALID, NonTerminalSubgroup::INVALID };
