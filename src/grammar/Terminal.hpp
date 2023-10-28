@@ -15,19 +15,33 @@ struct Position {
     size_t column;
 };
 
-struct Terminal : public Symbol
+class Terminal : public Symbol
 {
-    SymbolType< TerminalGroup, TerminalSubgroup > type;
+    using Type = SymbolType< TerminalGroup, TerminalSubgroup > ;
+    Type m_type;
+
+public:
     StringType word;
     Position position;
 
     Terminal( );
 
-    Terminal( TerminalGroup group, TerminalSubgroup subgroup );
+    Type type( ) const;
+
+    TerminalGroup group( ) const;
+
+    TerminalSubgroup subgroup( ) const;
 
     bool is_valid( ) const;
 
     bool operator==( const Terminal& other ) const;
+
+    static const Terminal INVALID_TERMINAL;
+
+protected:
+    Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id );
+
+    friend class GrammarSymbols;
 };
 
 struct TerminalHash
@@ -35,9 +49,8 @@ struct TerminalHash
     std::size_t
     operator( )( const Terminal& terminal ) const
     {
-        return std::hash< std::size_t >( )(
-                static_cast< std::size_t >( terminal.type.group )
-                ^ static_cast< std::size_t >( terminal.type.sub_group ) );
+        return std::hash< std::size_t >( )( static_cast< std::size_t >( terminal.group( ) )
+                                            ^ static_cast< std::size_t >( terminal.subgroup( ) ) );
     }
 };
 
@@ -130,9 +143,6 @@ enum class TerminalSubgroup : SymbolId
     SEMICOLON,
     ONELINE,
 };
-
-static const Terminal INVALID_TERMINAL =
-        Terminal{ TerminalGroup::INVALID, TerminalSubgroup::INVALID };
 
 using Terminals = std::vector< Terminal >;
 

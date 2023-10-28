@@ -35,6 +35,6 @@ private:
     Symbols m_right_side;
 };
 
-static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, INVALID_NON_TERMINAL };
+static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, NonTerminal::INVALID_NON_TERMINAL };
 
 #endif  // SYNTAXRULE_H

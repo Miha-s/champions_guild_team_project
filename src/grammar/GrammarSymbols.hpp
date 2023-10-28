@@ -37,84 +37,73 @@ public:
     }
 
     Terminal
-    get_terminal( TerminalGroup group, TerminalSubgroup subgroup ) const
+    define( TerminalGroup group, TerminalSubgroup subgroup )
     {
-        auto it = std::find( m_terminals.cbegin( ),
-                             m_terminals.cend( ),
-                             Terminal{ group, subgroup } );
+        auto it = std::find_if( m_terminals.cbegin( ),
+                                m_terminals.cend( ),
+                                [ group, subgroup ]( const Terminal& terminal ) {
+                                    return terminal.group( ) == group
+                                           && terminal.subgroup( ) == subgroup;
+                                } );
+
         if ( it != m_terminals.cend( ) )
         {
             return *it;
         }
 
-        return INVALID_TERMINAL;
+        auto new_symbol = m_terminals.insert( { group, subgroup, m_counter.get_next_id( ) } );
+        return *new_symbol.first;
     }
 
     NonTerminal
-    get_non_terminal( NonTerminalType type ) const
+    define( NonTerminalType type )
     {
-        auto it = std::find( m_non_terminals.cbegin( ),
-                             m_non_terminals.cend( ),
-                             NonTerminal{ type } );
+        auto it = std::find_if(
+                m_non_terminals.cbegin( ),
+                m_non_terminals.cend( ),
+                [ type ]( const NonTerminal& non_terminal ) { return non_terminal.m_type == type; } );
 
         if ( it != m_non_terminals.cend( ) )
         {
             return *it;
         }
 
-        return INVALID_NON_TERMINAL;
+        auto new_symbol = m_non_terminals.insert( { type, m_counter.get_next_id( ) } );
+        return *new_symbol.first;
     }
 
-    template < class... Symbols >
-    void
-    add_symbol( NonTerminal& symbol, Symbols&... symbols )
+    Terminal
+    get_terminal( TerminalGroup group, TerminalSubgroup subgroup ) const
     {
-        add_symbol( symbol );
-        add_symbol( symbols... );
+        auto it = std::find_if( m_terminals.cbegin( ),
+                                m_terminals.cend( ),
+                                [ group, subgroup ]( const Terminal& terminal ) {
+                                    return terminal.group( ) == group
+                                           && terminal.subgroup( ) == subgroup;
+                                } );
+
+        if ( it != m_terminals.cend( ) )
+        {
+            return *it;
+        }
+
+        return Terminal::INVALID_TERMINAL;
     }
 
-    template < class... Symbols >
-    void
-    add_symbol( Terminal& symbol, Symbols&... symbols )
+    NonTerminal
+    get_non_terminal( NonTerminalType type ) const
     {
-        add_symbol( symbol );
-        add_symbol( symbols... );
-    }
+        auto it = std::find_if(
+                m_non_terminals.cbegin( ),
+                m_non_terminals.cend( ),
+                [ type ]( const NonTerminal& non_terminal ) { return non_terminal.m_type == type; } );
 
-    void
-    add_symbol( NonTerminal& symbol )
-    {
-        auto it = std::find_if( m_non_terminals.begin( ),
-                                m_non_terminals.end( ),
-                                [ &symbol ]( const NonTerminal& sym ) { return sym == symbol; } );
+        if ( it != m_non_terminals.cend( ) )
+        {
+            return *it;
+        }
 
-        if ( it == m_non_terminals.end( ) )
-        {
-            symbol.id = m_counter.get_next_id( );
-            m_non_terminals.insert( symbol );
-        }
-        else
-        {
-            symbol.id = it->id;
-        }
-    }
-
-    void
-    add_symbol( Terminal& symbol )
-    {
-        auto it = std::find_if( m_terminals.begin( ),
-                                m_terminals.end( ),
-                                [ &symbol ]( const Terminal& sym ) { return sym == symbol; } );
-
-        if ( it == m_terminals.end( ) )
-        {
-            symbol.id = m_counter.get_next_id( );
-            m_terminals.insert( symbol );
-        }
-        else
-        {
-            symbol.id = it->id;
-        }
+        return NonTerminal::INVALID_NON_TERMINAL;
     }
 };
 
