@@ -15,12 +15,16 @@ public:
     {
     }
 
-    template < class... Symbols >
-    void
-    add_rule( const Symbols&... symbols )
+    Terminal
+    define( TerminalGroup group, TerminalSubgroup subgroup )
     {
-        std::tuple< Symbols... > copied_symbols( symbols... );
-        call_add_rule( copied_symbols, std::index_sequence_for< Symbols... >( ) );
+        return m_grammar_symbols.define( group, subgroup );
+    }
+
+    NonTerminal
+    define( NonTerminalType type )
+    {
+        return m_grammar_symbols.define( type );
     }
 
     Terminal
@@ -35,6 +39,13 @@ public:
         return m_grammar_symbols.get_non_terminal( type );
     }
 
+    template < class... Symbols >
+    void
+    add_rule( const Symbols&... symbols )
+    {
+        m_grammar_rules.push_back( SyntaxRule{ m_rules_counter.get_next_id( ), symbols... } );
+    }
+
     SyntaxRule
     get_rule( SymbolId id )
     {
@@ -43,16 +54,6 @@ public:
                                 [ id ]( const SyntaxRule& rule ) { return rule.id( ) == id; } );
 
         return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
-    }
-
-private:
-    template < class... Symbols, std::size_t... Is >
-    void
-    call_add_rule( std::tuple< Symbols... >& symbols, std::index_sequence< Is... > )
-    {
-        m_grammar_symbols.add_symbol( std::get< Is >( symbols )... );
-        m_grammar_rules.push_back(
-                SyntaxRule{ m_rules_counter.get_next_id( ), std::get< Is >( symbols )... } );
     }
 
 private:

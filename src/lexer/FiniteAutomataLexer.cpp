@@ -75,7 +75,7 @@ FiniteAutomataLexer::read_next_lexem( )
 
     auto position = m_input->get_position( );
 
-    Terminal lexem;
+    Terminal lexem = Terminal::INVALID_TERMINAL;
 
     if ( isalpha( symbol ) || symbol == '_' )
     {
@@ -92,7 +92,7 @@ FiniteAutomataLexer::read_next_lexem( )
 
     lexem.position = { position.first, position.second };
 
-    if ( lexem == INVALID_TERMINAL )
+    if ( lexem == Terminal::INVALID_TERMINAL )
     {
         lexem.word.append( read_until_lexem_end( m_input ) );
         m_success = false;
@@ -238,7 +238,7 @@ FiniteAutomataLexer::read_number_lexem( )
         m_input->get( );
     }
 
-    Terminal output;
+    auto output = Terminal::INVALID_TERMINAL;
     if ( state == Num::F_HEX )
     {
         output = m_grammar->create( TerminalGroup::NUMERIC, TerminalSubgroup::HEX );
@@ -250,10 +250,6 @@ FiniteAutomataLexer::read_number_lexem( )
     else if ( state == Num::F_FLOAT )
     {
         output = m_grammar->create( TerminalGroup::NUMERIC, TerminalSubgroup::FLOAT );
-    }
-    else
-    {
-        output = INVALID_TERMINAL;
     }
 
     output.word = value;
@@ -305,7 +301,8 @@ FiniteAutomataLexer::read_letter_lexem( )
     }
 
     auto it = ReservedLiteralsMap.find( value );
-    Terminal output;
+    auto output = Terminal::INVALID_TERMINAL;
+
     if ( it != ReservedLiteralsMap.end( ) )
     {
         output = m_grammar->create( TerminalGroup::RESERVED, it->second );
@@ -635,7 +632,7 @@ FiniteAutomataLexer::read_operator_lexem( )
     auto result = FinishTerminalMap.at( state );
     if ( result.first == TerminalGroup::INVALID )
     {
-        return INVALID_TERMINAL;
+        return Terminal::INVALID_TERMINAL;
     }
 
     auto lexem = m_grammar->create( result.first, result.second );

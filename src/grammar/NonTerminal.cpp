@@ -1,24 +1,33 @@
 #include "NonTerminal.hpp"
 
-NonTerminal::NonTerminal( )
-    : Symbol{ false }
+const NonTerminal NonTerminal::INVALID_NON_TERMINAL = { NonTerminalType::INVALID, INVALID_ID };
+
+NonTerminal::NonTerminal( NonTerminalType type, SymbolId id )
+    : Symbol{ false, id }
+    , m_type{ type }
 {
 }
 
-NonTerminal::NonTerminal( NonTerminalType group )
-    : Symbol{ false }
-    , type{ group }
+NonTerminal::NonTerminal( )
+    : Symbol( INVALID_NON_TERMINAL )
 {
+    *this = INVALID_NON_TERMINAL;
+}
+
+NonTerminalType
+NonTerminal::type( ) const
+{
+    return m_type;
 }
 
 bool
 NonTerminal::is_valid( ) const
 {
-    return type != NonTerminalType::INVALID;
+    return m_type != NonTerminalType::INVALID;
 };
 
 bool
 NonTerminal::operator==( const NonTerminal& other ) const
 {
-    return type == other.type;
+    return m_type == other.m_type && Symbol::operator==( other );
 }
