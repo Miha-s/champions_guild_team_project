@@ -24,13 +24,13 @@ public:
     }
 
     Terminal
-    get_symbol( TerminalGroup group, TerminalSubgroup subgroup ) const
+    create( TerminalGroup group, TerminalSubgroup subgroup ) const
     {
         return m_grammar_symbols.get_terminal( group, subgroup );
     }
 
     NonTerminal
-    get_symbol( NonTerminalGroup group, NonTerminalSubgroup subgroup ) const
+    create( NonTerminalGroup group, NonTerminalSubgroup subgroup ) const
     {
         return m_grammar_symbols.get_non_terminal( group, subgroup );
     }

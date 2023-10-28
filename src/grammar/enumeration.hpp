@@ -5,7 +5,7 @@
 
 using SymbolId = std::size_t;
 
-SymbolId INVALID_ID = -1;
+static constexpr SymbolId INVALID_ID = -1;
 
 using StringType = std::string;
 

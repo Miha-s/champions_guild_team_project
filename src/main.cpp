@@ -9,6 +9,7 @@ main( )
     NonTerminal c;
     NonTerminal d;
 
+
     Grammar golang;
 
     golang.add_rule( c, a, b );
