@@ -1,0 +1,12 @@
+# ninja log v5
+0	436	1698583038929863224	src/CMakeFiles/grammar.dir/algorithms/algorithms.cpp.o	dfaa488218983a93
+0	438	1698583038929876473	src/CMakeFiles/grammar.dir/grammar/Grammar.cpp.o	d3ea310d07c31240
+0	438	1698583038929862432	src/CMakeFiles/grammar.dir/grammar/NonTerminal.cpp.o	b7582dcfd59bc0ff
+0	439	1698583038929871140	src/CMakeFiles/grammar.dir/grammar/Terminal.cpp.o	13336857e905c1f3
+1	474	1698583038971067215	src/CMakeFiles/parser.dir/main.cpp.o	2cf666e8a83b6b7
+439	557	1698583039055217658	src/libgrammar.dylib	4c672fd314cc9b60
+1	672	1698583039168625207	src/CMakeFiles/parsing.dir/lexer/FiniteAutomataLexer.cpp.o	b841ea9f97310e92
+672	711	1698583039210550741	src/libparsing.dylib	d2f782a4ba0c91b
+711	742	1698583039241781683	src/parser	636be88f353438ff
+10	2466	1698596991656944839	src/CMakeFiles/grammar.dir/grammar/NonTerminal.cpp.o	b7582dcfd59bc0ff
+4	435	1698597021754164074	src/CMakeFiles/grammar.dir/grammar/Terminal.cpp.o	13336857e905c1f3

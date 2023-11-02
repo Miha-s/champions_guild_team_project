@@ -56,6 +56,49 @@ public:
         return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
     }
 
+    std::unordered_set< NonTerminal, NonTerminalHash >
+    get_non_terminals( ) const
+    {
+        return this->m_grammar_symbols.non_terminals( );
+    }
+
+    std::vector< SyntaxRule >
+    get_grammar_rules( ) const
+    {
+        return this->m_grammar_rules;
+    }
+
+    Terminal
+    get_terminal_by_id( int id )
+    {
+        auto it = std::find_if( this->m_grammar_symbols.terminals( ).begin( ),
+                                this->m_grammar_symbols.terminals( ).end( ),
+                                [ id ]( const Terminal t ) { return t.id( ) == id; } );
+        return *it;
+    }
+
+    NonTerminal
+    get_non_terminal_by_id( int id )
+    {
+        auto it = std::find_if( this->m_grammar_symbols.non_terminals( ).begin( ),
+                                this->m_grammar_symbols.non_terminals( ).end( ),
+                                [ id ]( const NonTerminal t ) { return t.id( ) == id; } );
+        return *it;
+    }
+
+    static bool
+    is_epsilon( Symbol symbol )
+    {
+        if ( !symbol.is_terminal( ) )
+        {
+            return false;
+        }
+        else
+        {
+            return symbol == Terminal::EPSILON_TERMINAL;
+        }
+    }
+
 private:
     Counter m_rules_counter;
     std::vector< SyntaxRule > m_grammar_rules;

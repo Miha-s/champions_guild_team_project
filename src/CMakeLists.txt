@@ -11,7 +11,8 @@ file(GLOB_RECURSE GRAMMAR_LIB_SOURCES
 
 add_library(grammar SHARED
                 ${GRAMMAR_LIB_SOURCES}
-                ${GRAMMAR_LIB_HEADERS})
+                ${GRAMMAR_LIB_HEADERS}
+        algorithms/algorithms.cpp)
 
 set_property(TARGET grammar PROPERTY CXX_STANDARD 14)
 

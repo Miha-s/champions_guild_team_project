@@ -3,6 +3,8 @@ enable_testing()
 add_executable(
   LexerTest
   lexer/LexerTest.cpp
+        algorithms/ArlgorithmsTest.cpp
+        algorithms/ArlgorithmsTest.h
 )
 target_link_libraries(
   LexerTest

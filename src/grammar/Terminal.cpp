@@ -4,6 +4,10 @@ Terminal const Terminal::INVALID_TERMINAL = { TerminalGroup::INVALID,
                                               TerminalSubgroup::INVALID,
                                               INVALID_ID };
 
+Terminal const Terminal::EPSILON_TERMINAL = { TerminalGroup::OTHER,
+                                              TerminalSubgroup::EPSILON,
+                                              EPSILON_ID };
+
 Terminal::Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id )
     : Symbol{ true, id }
     , m_type{ group, subgroup }
