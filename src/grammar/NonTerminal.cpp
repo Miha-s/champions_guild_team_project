@@ -31,3 +31,5 @@ NonTerminal::operator==( const NonTerminal& other ) const
 {
     return m_type == other.m_type && Symbol::operator==( other );
 }
+
+

@@ -25,13 +25,13 @@ public:
     }
 
     const NonTerminalsSet&
-    non_terminals( )
+    non_terminals( ) const
     {
         return m_non_terminals;
     }
 
     const TerminalsSet&
-    terminals( )
+    terminals( ) const
     {
         return m_terminals;
     }

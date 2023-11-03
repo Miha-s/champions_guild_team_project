@@ -39,7 +39,12 @@ struct NonTerminalHash
 
 enum class NonTerminalType : SymbolId
 {
-    INVALID
+    INVALID,
+    A,
+    B,
+    C,
+    D,
+    S
 };
 
 using NonTerminals = std::vector< NonTerminal >;

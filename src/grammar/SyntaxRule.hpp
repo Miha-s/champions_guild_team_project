@@ -29,6 +29,18 @@ public:
         return m_id != INVALID_ID && m_left_side.is_valid( );
     }
 
+    NonTerminal
+    get_left_side( ) const
+    {
+        return this->m_left_side;
+    }
+
+    Symbols
+    get_right_side( ) const
+    {
+        return this->m_right_side;
+    }
+
 private:
     SymbolId m_id;
     NonTerminal m_left_side;

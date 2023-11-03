@@ -1,6 +1,7 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
 #include <vector>
+#include <unordered_set>
 
 #include "Symbol.hpp"
 #include "SymbolType.hpp"
@@ -10,14 +11,15 @@ enum class TerminalGroup : SymbolId;
 
 enum class TerminalSubgroup : SymbolId;
 
-struct Position {
+struct Position
+{
     size_t row;
     size_t column;
 };
 
 class Terminal : public Symbol
 {
-    using Type = SymbolType< TerminalGroup, TerminalSubgroup > ;
+    using Type = SymbolType< TerminalGroup, TerminalSubgroup >;
     Type m_type;
 
 public:
@@ -37,6 +39,8 @@ public:
     bool operator==( const Terminal& other ) const;
 
     static const Terminal INVALID_TERMINAL;
+
+    static const Terminal EPSILON_TERMINAL;
 
 protected:
     Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id );
@@ -68,6 +72,7 @@ enum class TerminalGroup : SymbolId
 enum class TerminalSubgroup : SymbolId
 {
     INVALID,
+    EPSILON,
     DECIMAL,
     FLOAT,
     HEX,
@@ -145,5 +150,19 @@ enum class TerminalSubgroup : SymbolId
 };
 
 using Terminals = std::vector< Terminal >;
+
+struct TerminalsHash {
+    size_t operator()(const Terminals& terminals) const {
+        size_t hash = 0;
+
+        for (const Terminal& terminal : terminals) {
+            hash ^= TerminalHash{}(terminal);
+        }
+
+        return hash;
+    }
+};
+
+using TerminalsSet = std::unordered_set< Terminals, TerminalsHash >;
 
 #endif  // TERMINAL_HPP

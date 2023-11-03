@@ -7,6 +7,8 @@ using SymbolId = std::size_t;
 
 static constexpr SymbolId INVALID_ID = -1;
 
+static constexpr SymbolId EPSILON_ID = 0;
+
 using StringType = std::string;
 
 #endif  // ENUMERATION_HPP

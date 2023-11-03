@@ -1,7 +1,6 @@
 #ifndef ALGORITHMS_HPP
 #define ALGORITHMS_HPP
 #include <unordered_map>
-
 #include "grammar/Grammar.hpp"
 
 using NonTerminalWithTerminals = std::unordered_map< NonTerminal, TerminalsSet, NonTerminalHash >;

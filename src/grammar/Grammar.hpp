@@ -47,13 +47,56 @@ public:
     }
 
     SyntaxRule
-    get_rule( SymbolId id )
+    get_rule( SymbolId id ) const
     {
-        auto it = std::find_if( m_grammar_rules.begin( ),
-                                m_grammar_rules.end( ),
+        auto it = std::find_if( m_grammar_rules.cbegin( ),
+                                m_grammar_rules.cend( ),
                                 [ id ]( const SyntaxRule& rule ) { return rule.id( ) == id; } );
 
         return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
+    }
+
+    std::unordered_set< NonTerminal, NonTerminalHash >
+    get_non_terminals( ) const
+    {
+        return this->m_grammar_symbols.non_terminals( );
+    }
+
+    std::vector< SyntaxRule >
+    get_grammar_rules( ) const
+    {
+        return this->m_grammar_rules;
+    }
+
+    Terminal
+    get_terminal_by_id( int id ) const
+    {
+        auto it = std::find_if( this->m_grammar_symbols.terminals( ).cbegin( ),
+                                this->m_grammar_symbols.terminals( ).cend( ),
+                                [ id ]( const Terminal t ) { return t.id( ) == id; } );
+        return *it;
+    }
+
+    NonTerminal
+    get_non_terminal_by_id( int id ) const
+    {
+        auto it = std::find_if( this->m_grammar_symbols.non_terminals( ).cbegin( ),
+                                this->m_grammar_symbols.non_terminals( ).cend( ),
+                                [ id ]( const NonTerminal t ) { return t.id( ) == id; } );
+        return *it;
+    }
+
+    static bool
+    is_epsilon( Symbol symbol )
+    {
+        if ( !symbol.is_terminal( ) )
+        {
+            return false;
+        }
+        else
+        {
+            return symbol == Terminal::EPSILON_TERMINAL;
+        }
     }
 
 private:

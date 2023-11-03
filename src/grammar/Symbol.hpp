@@ -13,13 +13,13 @@ class Symbol
 
 public:
     SymbolId
-    id( )
+    id( ) const
     {
         return m_id;
     }
 
     bool
-    is_terminal( )
+    is_terminal( ) const
     {
         return m_is_terminal;
     }
@@ -46,6 +46,33 @@ protected:
     friend class GrammarSymbols;
 };
 
+struct SymbolHash
+{
+    std::size_t
+    operator( )( const Symbol& symbol ) const
+    {
+        return std::hash< std::size_t >( )( static_cast< std::size_t >( symbol.is_terminal( ) )
+                                            ^ static_cast< std::size_t >( symbol.id( ) ) );
+    }
+};
+
 using Symbols = std::vector< Symbol >;
+
+struct SymbolsHash
+{
+    std::size_t
+    operator( )( const Symbols& symbols ) const
+    {
+        std::size_t seed = 0;
+
+        // Combine the hashes of individual Symbols
+        for ( const Symbol& symbol : symbols )
+        {
+            seed ^= SymbolHash{ }( symbol );
+        }
+
+        return seed;
+    }
+};
 
 #endif  // SYMBOL_H
