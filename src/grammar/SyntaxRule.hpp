@@ -32,13 +32,13 @@ public:
     NonTerminal
     get_left_side( ) const
     {
-        this->m_left_side;
+        return this->m_left_side;
     }
 
     Symbols
     get_right_side( ) const
     {
-        this->m_right_side;
+        return this->m_right_side;
     }
 
 private:

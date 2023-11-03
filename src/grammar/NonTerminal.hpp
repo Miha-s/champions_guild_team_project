@@ -39,6 +39,11 @@ struct NonTerminalHash
 
 enum class NonTerminalType : SymbolId
 {
+    A,
+    B,
+    C,
+    D,
+    S,
     INVALID
 };
 

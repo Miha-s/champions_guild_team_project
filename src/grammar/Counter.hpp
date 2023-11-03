@@ -11,7 +11,7 @@ struct Counter
     }
 
 private:
-    SymbolId current_id = 1;
+    SymbolId current_id = 0;
 };
 
 #endif  // COUNTER_HPP
