@@ -235,7 +235,7 @@ multiply( const std::vector< std::unordered_set< Terminals, TerminalsHash > >& s
 }
 
 NonTerminalWithTerminals
-first_k( Grammar& grammar, int k )
+first_k( const Grammar& grammar, int k )
 {
     std::unordered_map< Symbol, std::unordered_set< Symbols, SymbolsHash >, SymbolHash > firstSets =
             std::unordered_map< Symbol, std::unordered_set< Symbols, SymbolsHash >, SymbolHash >{ };
@@ -300,7 +300,7 @@ first_k( Grammar& grammar, int k )
 }
 
 NonTerminalWithTerminals
-follow_k( Grammar& grammar, int k )
+follow_k( const Grammar& grammar, int k )
 {
     std::unordered_map< NonTerminal,
                         std::unordered_set< Terminals, TerminalsHash >,

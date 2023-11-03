@@ -152,7 +152,7 @@ enum class TerminalSubgroup : SymbolId
 using Terminals = std::vector< Terminal >;
 
 struct TerminalsHash {
-    size_t operator()(const std::vector<Terminal>& terminals) const {
+    size_t operator()(const Terminals& terminals) const {
         size_t hash = 0;
 
         for (const Terminal& terminal : terminals) {

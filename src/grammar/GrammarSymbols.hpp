@@ -31,7 +31,7 @@ public:
     }
 
     const TerminalsSet&
-    terminals( )
+    terminals( ) const
     {
         return m_terminals;
     }

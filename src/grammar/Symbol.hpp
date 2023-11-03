@@ -36,8 +36,8 @@ public:
         return m_id == other.m_id && m_is_terminal == other.m_is_terminal;
     }
 
-
-            protected : Symbol( bool is_terminal, SymbolId id )
+protected:
+    Symbol( bool is_terminal, SymbolId id )
         : m_is_terminal{ is_terminal }
         , m_id{ id }
     {
@@ -61,7 +61,7 @@ using Symbols = std::vector< Symbol >;
 struct SymbolsHash
 {
     std::size_t
-    operator( )( const std::vector< Symbol >& symbols ) const
+    operator( )( const Symbols& symbols ) const
     {
         std::size_t seed = 0;
 

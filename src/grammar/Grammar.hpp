@@ -47,10 +47,10 @@ public:
     }
 
     SyntaxRule
-    get_rule( SymbolId id )
+    get_rule( SymbolId id ) const
     {
-        auto it = std::find_if( m_grammar_rules.begin( ),
-                                m_grammar_rules.end( ),
+        auto it = std::find_if( m_grammar_rules.cbegin( ),
+                                m_grammar_rules.cend( ),
                                 [ id ]( const SyntaxRule& rule ) { return rule.id( ) == id; } );
 
         return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
@@ -69,19 +69,19 @@ public:
     }
 
     Terminal
-    get_terminal_by_id( int id )
+    get_terminal_by_id( int id ) const
     {
-        auto it = std::find_if( this->m_grammar_symbols.terminals( ).begin( ),
-                                this->m_grammar_symbols.terminals( ).end( ),
+        auto it = std::find_if( this->m_grammar_symbols.terminals( ).cbegin( ),
+                                this->m_grammar_symbols.terminals( ).cend( ),
                                 [ id ]( const Terminal t ) { return t.id( ) == id; } );
         return *it;
     }
 
     NonTerminal
-    get_non_terminal_by_id( int id )
+    get_non_terminal_by_id( int id ) const
     {
-        auto it = std::find_if( this->m_grammar_symbols.non_terminals( ).begin( ),
-                                this->m_grammar_symbols.non_terminals( ).end( ),
+        auto it = std::find_if( this->m_grammar_symbols.non_terminals( ).cbegin( ),
+                                this->m_grammar_symbols.non_terminals( ).cend( ),
                                 [ id ]( const NonTerminal t ) { return t.id( ) == id; } );
         return *it;
     }
