@@ -1,5 +1,0 @@
-if(EXISTS "/Users/user/unv/champions_guild_team_project/cmake-build-debug/tests/LexerTest[1]_tests.cmake")
-  include("/Users/user/unv/champions_guild_team_project/cmake-build-debug/tests/LexerTest[1]_tests.cmake")
-else()
-  add_test(LexerTest_NOT_BUILT LexerTest_NOT_BUILT)
-endif()
