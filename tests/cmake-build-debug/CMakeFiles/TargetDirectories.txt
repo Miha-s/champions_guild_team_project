@@ -1,0 +1,5 @@
+/Users/user/unv/champions_guild_team_project/tests/cmake-build-debug/CMakeFiles/LexerTest.dir
+/Users/user/unv/champions_guild_team_project/tests/cmake-build-debug/CMakeFiles/AlgorithmsTest.dir
+/Users/user/unv/champions_guild_team_project/tests/cmake-build-debug/CMakeFiles/test.dir
+/Users/user/unv/champions_guild_team_project/tests/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/user/unv/champions_guild_team_project/tests/cmake-build-debug/CMakeFiles/rebuild_cache.dir

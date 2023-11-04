@@ -3,6 +3,8 @@
 #include <lexer/FiniteAutomataLexer.hpp>
 
 #include "algorithms/algorithms.hpp"
+#include "syntax_analyser/LL1.hpp"
+#include "syntax_analyser/SyntaxAnalyser.hpp"
 
 class LL1Test : public testing::Test
 {
@@ -10,15 +12,51 @@ protected:
     void
     SetUp( ) override
     {
+        symbols_queue = std::make_shared< SymbolsQueue >( );
+        auto dummy_output_stream = std::make_shared< std::ostringstream >( );
+        dummy_output = std::static_pointer_cast< std::ostream >( dummy_output_stream );
         grammar = std::make_shared< Grammar >( );
+
+        SymbolPtr e = grammar->epsilon( );
+        SymbolPtr plus = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::PLUS );
+        SymbolPtr andd = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::AND );
+        SymbolPtr round_left = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::ROUND_LEFT );
+        SymbolPtr round_right = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::ROUND_RIGHT );
+        SymbolPtr a_terminal = grammar->define( TerminalGroup::COMMENT, TerminalSubgroup::VAR );
+
+        NonTerminalPtr a = grammar->define( NonTerminalType::A );
+        NonTerminalPtr b = grammar->define( NonTerminalType::B );
+        NonTerminalPtr c = grammar->define( NonTerminalType::C );
+        NonTerminalPtr d = grammar->define( NonTerminalType::D );
+        NonTerminalPtr s = grammar->define( NonTerminalType::S );
+        grammar->add_rule( s, b, a );
+        grammar->add_rule( a, plus, b, a );
+        grammar->add_rule( a, e );
+        grammar->add_rule( c, e );
+        grammar->add_rule( d, a_terminal );
+        grammar->add_rule( b, d, c );
+        grammar->add_rule( c, andd, d, c );
+        grammar->add_rule( c, andd, d, c );
+        grammar->add_rule( d, round_left, s, round_right );
+        symbols_queue->push_lexem( round_left );
+        symbols_queue->push_lexem( a_terminal );
+        symbols_queue->push_lexem( plus );
+        symbols_queue->push_lexem( a_terminal );
+        symbols_queue->push_lexem( round_right );
+        symbols_queue->push_lexem( andd );
+        symbols_queue->push_lexem( a_terminal );
+        symbols_queue->push_lexem( e );
     }
 
-    GrammarPtr grammar;
+    std::shared_ptr< LL1Analyser > analyser;
+    std::shared_ptr<Grammar> grammar;
+    SymbolsQueuePtr symbols_queue;
+    OutputStreamPtr dummy_output;
 };
 
-TEST_F( LL1Test, Test )
+TEST_F( LL1Test, Testfd )
 {
-
+    analyser = std::make_shared< LL1Analyser >(symbols_queue, dummy_output, grammar);
+    analyser->process();
 }
-
 
