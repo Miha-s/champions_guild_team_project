@@ -23,11 +23,7 @@ jobs:
         shell: bash
 
       - name: Build the project
-        run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          make
+        run: ./build.sh
 
       - name: Save build artifacts
         uses: actions/upload-artifact@v3
@@ -49,6 +45,4 @@ jobs:
           path: build
 
       - name: Run tests
-        run: |
-          cd build
-          ctest
+        run: ./tests.sh
