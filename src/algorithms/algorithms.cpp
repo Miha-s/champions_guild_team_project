@@ -69,6 +69,18 @@ first_k( const Grammar& grammar, int k )
     return firstSets;
 }
 
+SymbolsSet
+first_k( const Grammar& grammar, int k, const Symbols& symbols )
+{
+    NonTerminalWithTerminals firstSets = first_k( grammar, k );
+    SymbolsSet result;
+    for ( const auto& symbol : symbols )
+    {
+        result.add_k( firstSets[ symbol ], k );
+    }
+    return result;
+}
+
 NonTerminalWithTerminals
 follow_k( const Grammar& grammar, int k )
 {
@@ -95,7 +107,6 @@ follow_k( const Grammar& grammar, int k )
                 const auto& right_side = rule->get_right_side( );
                 auto it = std::find( right_side.begin( ), right_side.end( ), non_terminal );
                 SymbolsSet tmp_set;
-
                 it++;
 
                 while ( it != right_side.end( ) )

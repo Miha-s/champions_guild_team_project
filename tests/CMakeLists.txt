@@ -8,6 +8,7 @@ add_executable(
 add_executable(
   AlgorithmsTest
   algorithms/AlgorithmsTest.cpp
+        parser/LL1Test.cpp
 )
 
 target_link_libraries(
