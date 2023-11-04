@@ -1,23 +1,27 @@
 #include "NonTerminal.hpp"
 
-const NonTerminal NonTerminal::INVALID_NON_TERMINAL = { NonTerminalType::INVALID, INVALID_ID };
-
 NonTerminal::NonTerminal( NonTerminalType type, SymbolId id )
-    : Symbol{ false, id }
+    : Symbol{ id }
     , m_type{ type }
 {
 }
 
 NonTerminal::NonTerminal( )
-    : Symbol( INVALID_NON_TERMINAL )
+    : Symbol( INVALID_ID )
+    , m_type( NonTerminalType::INVALID )
 {
-    *this = INVALID_NON_TERMINAL;
 }
 
 NonTerminalType
 NonTerminal::type( ) const
 {
     return m_type;
+}
+
+bool
+NonTerminal::is_terminal( ) const
+{
+    return false;
 }
 
 bool
@@ -32,4 +36,9 @@ NonTerminal::operator==( const NonTerminal& other ) const
     return m_type == other.m_type && Symbol::operator==( other );
 }
 
-
+std::shared_ptr< const NonTerminal >
+NonTerminal::InvalidNonTerminal( )
+{
+    static std::shared_ptr< const NonTerminal > invalid_non_terminal;
+    return invalid_non_terminal;
+}

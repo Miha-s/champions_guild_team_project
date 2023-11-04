@@ -10,7 +10,7 @@ class FiniteAutomataLexer : public Lexer
 
 public:
     FiniteAutomataLexer( InputStreamPtr input,
-                         TerminalsQueuePtr queue,
+                         LexemsQueuePtr queue,
                          OutputStreamPtr output,
                          GrammarPtr grammar );
 
@@ -19,13 +19,13 @@ public:
     bool successfully_parsed( ) const override;
     FailedState get_failed_state( ) const override;
 private:
-    using TerminalPtr = std::shared_ptr< Terminal >;
+    using LexemPtr = std::shared_ptr< Lexem >;
 
-    TerminalPtr read_next_lexem( );
+    LexemPtr read_next_lexem( );
 
-    Terminal read_number_lexem( );
-    Terminal read_letter_lexem( );
-    Terminal read_operator_lexem( );
+    Lexem read_number_lexem( );
+    Lexem read_letter_lexem( );
+    Lexem read_operator_lexem( );
 };
 
 #endif // FINITEAUTOMATALEXER_H

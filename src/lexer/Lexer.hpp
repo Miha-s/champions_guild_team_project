@@ -3,12 +3,12 @@
 #include <iostream>
 #include <memory>
 #include "structures/LexemsQueue.hpp"
-#include "grammar/Terminal.hpp"
+#include "Lexem.hpp"
 #include "grammar/Grammar.hpp"
 #include "structures/InputCountingDecorator.hpp"
 
-using TerminalsQueue = LexemsQueue< Terminal >;
-using TerminalsQueuePtr = std::shared_ptr< TerminalsQueue >;
+using LexemsQueue = Queue< Lexem >;
+using LexemsQueuePtr = std::shared_ptr< LexemsQueue >;
 using InputStream = InputCoutingDecorator< std::istream >;
 using InputStreamPtr = std::shared_ptr< InputStream >;
 using OutputStreamPtr = std::shared_ptr< std::ostream >;
@@ -20,7 +20,7 @@ public:
     using FailedState = int;
 
     Lexer( InputStreamPtr input,
-           TerminalsQueuePtr queue,
+           LexemsQueuePtr queue,
            OutputStreamPtr output,
            GrammarPtr grammar )
         : m_input( input )
@@ -36,7 +36,7 @@ public:
     virtual FailedState get_failed_state( ) const = 0;
 protected:
     InputStreamPtr m_input;
-    TerminalsQueuePtr m_queue;
+    LexemsQueuePtr m_queue;
     OutputStreamPtr m_output;
     GrammarPtr m_grammar;
 };

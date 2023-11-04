@@ -9,18 +9,20 @@ enum class NonTerminalType : SymbolId;
 
 class NonTerminal : public Symbol
 {
-    NonTerminalType m_type;
+    const NonTerminalType m_type;
 
 public:
     NonTerminal( );
 
     NonTerminalType type( ) const;
 
+    bool is_terminal( ) const override;
+
     bool is_valid( ) const;
 
     bool operator==( const NonTerminal& other ) const;
 
-    static const NonTerminal INVALID_NON_TERMINAL;
+    static std::shared_ptr< const NonTerminal > InvalidNonTerminal( );
 
 protected:
     NonTerminal( NonTerminalType type, SymbolId id );
@@ -47,5 +49,7 @@ enum class NonTerminalType : SymbolId
     S
 };
 
-using NonTerminals = std::vector< NonTerminal >;
+using NonTerminalPtr = std::shared_ptr< const NonTerminal >;
+using NonTerminals = std::vector< NonTerminalPtr >;
+
 #endif  // NONTERMINAL_HPP

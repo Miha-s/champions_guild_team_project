@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 FiniteAutomataLexer::FiniteAutomataLexer( InputStreamPtr input,
-                                          TerminalsQueuePtr queue,
+                                          LexemsQueuePtr queue,
                                           OutputStreamPtr output,
                                           GrammarPtr grammar )
     : Lexer( input, queue, output, grammar )
@@ -61,7 +61,7 @@ FiniteAutomataLexer::get_failed_state( ) const
     return FailedState{ };
 }
 
-FiniteAutomataLexer::TerminalPtr
+FiniteAutomataLexer::LexemPtr
 FiniteAutomataLexer::read_next_lexem( )
 {
     skip_white_characters( m_input );
@@ -75,7 +75,7 @@ FiniteAutomataLexer::read_next_lexem( )
 
     auto position = m_input->get_position( );
 
-    Terminal lexem = Terminal::INVALID_TERMINAL;
+    Lexem lexem;
 
     if ( isalpha( symbol ) || symbol == '_' )
     {
@@ -90,15 +90,15 @@ FiniteAutomataLexer::read_next_lexem( )
         lexem = read_operator_lexem( );
     }
 
-    lexem.position = { position.first, position.second };
+    lexem.pos = { position.first, position.second };
 
-    if ( lexem == Terminal::INVALID_TERMINAL )
+    if ( !lexem.is_valid( ) )
     {
         lexem.word.append( read_until_lexem_end( m_input ) );
         m_success = false;
     }
 
-    return std::make_shared< Terminal >( lexem );
+    return std::make_shared< Lexem >( lexem );
 }
 
 enum class Num
@@ -216,7 +216,7 @@ get_next_number_state( Num state, int c )
     return state;
 }
 
-Terminal
+Lexem
 FiniteAutomataLexer::read_number_lexem( )
 {
     int c;
@@ -238,18 +238,19 @@ FiniteAutomataLexer::read_number_lexem( )
         m_input->get( );
     }
 
-    auto output = Terminal::INVALID_TERMINAL;
+    Lexem output;
+
     if ( state == Num::F_HEX )
     {
-        output = m_grammar->create( TerminalGroup::NUMERIC, TerminalSubgroup::HEX );
+        output.type = {TerminalGroup::NUMERIC, TerminalSubgroup::HEX };
     }
     else if ( state == Num::F_DECIMAL )
     {
-        output = m_grammar->create( TerminalGroup::NUMERIC, TerminalSubgroup::DECIMAL );
+        output.type = { TerminalGroup::NUMERIC, TerminalSubgroup::DECIMAL };
     }
     else if ( state == Num::F_FLOAT )
     {
-        output = m_grammar->create( TerminalGroup::NUMERIC, TerminalSubgroup::FLOAT );
+        output.type = { TerminalGroup::NUMERIC, TerminalSubgroup::FLOAT };
     }
 
     output.word = value;
@@ -291,7 +292,7 @@ accepted_letter( char c )
     return isalpha( c ) || isdigit( c ) || c == '_';
 }
 
-Terminal
+Lexem
 FiniteAutomataLexer::read_letter_lexem( )
 {
     StringType value;
@@ -301,15 +302,15 @@ FiniteAutomataLexer::read_letter_lexem( )
     }
 
     auto it = ReservedLiteralsMap.find( value );
-    auto output = Terminal::INVALID_TERMINAL;
+    Lexem output;
 
     if ( it != ReservedLiteralsMap.end( ) )
     {
-        output = m_grammar->create( TerminalGroup::RESERVED, it->second );
+        output.type = {TerminalGroup::RESERVED, it->second};
     }
     else
     {
-        output = m_grammar->create( TerminalGroup::OTHER, TerminalSubgroup::IDENTIFIER );
+        output.type = { TerminalGroup::OTHER, TerminalSubgroup::IDENTIFIER };
     }
 
     output.word = value;
@@ -471,7 +472,7 @@ static const std::unordered_map< Sym, std::pair< TerminalGroup, TerminalSubgroup
 
 #define ADVANCE value.push_back(m_input->get( ))
 
-Terminal
+Lexem
 FiniteAutomataLexer::read_operator_lexem( )
 {
     int c;
@@ -629,14 +630,16 @@ FiniteAutomataLexer::read_operator_lexem( )
         ADVANCE;
     }
 
+    Lexem output;
+
     auto result = FinishTerminalMap.at( state );
     if ( result.first == TerminalGroup::INVALID )
     {
-        return Terminal::INVALID_TERMINAL;
+        return output;
     }
 
-    auto lexem = m_grammar->create( result.first, result.second );
-    lexem.word = value;
+    output.type = { result.first, result.second };
+    output.word = value;
 
-    return lexem;
+    return output;
 }

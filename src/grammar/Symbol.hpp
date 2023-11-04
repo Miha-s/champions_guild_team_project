@@ -1,5 +1,6 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
+#include <memory>
 #include <vector>
 
 #include "enumeration.hpp"
@@ -8,8 +9,7 @@ class GrammarSymbols;
 
 class Symbol
 {
-    SymbolId m_id = INVALID_ID;
-    bool m_is_terminal;
+    const SymbolId m_id;
 
 public:
     SymbolId
@@ -18,10 +18,22 @@ public:
         return m_id;
     }
 
-    bool
+    virtual bool
     is_terminal( ) const
     {
-        return m_is_terminal;
+        return false;
+    }
+
+    virtual bool
+    is_epsilon( ) const
+    {
+        return false;
+    }
+
+    bool
+    is_non_terminal( ) const
+    {
+        return !is_terminal( );
     }
 
     bool
@@ -33,17 +45,18 @@ public:
     bool
     operator==( const Symbol& other ) const
     {
-        return m_id == other.m_id && m_is_terminal == other.m_is_terminal;
+        return m_id == other.m_id;
     }
 
-protected:
-    Symbol( bool is_terminal, SymbolId id )
-        : m_is_terminal{ is_terminal }
-        , m_id{ id }
+    virtual ~Symbol( )
     {
     }
 
-    friend class GrammarSymbols;
+protected:
+    Symbol( SymbolId id )
+        : m_id{ id }
+    {
+    }
 };
 
 struct SymbolHash
@@ -56,7 +69,8 @@ struct SymbolHash
     }
 };
 
-using Symbols = std::vector< Symbol >;
+using SymbolPtr = std::shared_ptr< const Symbol >;
+using Symbols = std::vector< SymbolPtr >;
 
 struct SymbolsHash
 {
@@ -66,9 +80,9 @@ struct SymbolsHash
         std::size_t seed = 0;
 
         // Combine the hashes of individual Symbols
-        for ( const Symbol& symbol : symbols )
+        for ( const auto& symbol : symbols )
         {
-            seed ^= SymbolHash{ }( symbol );
+            seed ^= std::hash< SymbolPtr >{ }( symbol );
         }
 
         return seed;
