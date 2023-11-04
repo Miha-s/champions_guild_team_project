@@ -24,6 +24,18 @@ public:
         return m_internal_set.end( );
     }
 
+    typename InternalSet::const_iterator
+    begin( ) const
+    {
+        return m_internal_set.cbegin( );
+    }
+
+    typename InternalSet::const_iterator
+    end( ) const
+    {
+        return m_internal_set.cend( );
+    }
+
     std::pair< typename InternalSet::iterator, bool >
     insert( const typename InternalSet::value_type& value )
     {
