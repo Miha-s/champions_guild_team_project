@@ -48,16 +48,23 @@ public:
     void
     add_k( const ClassType& other, std::size_t k )
     {
+        InternalSet tmp_set;
         if ( m_internal_set.empty( ) )
         {
-            m_internal_set = other.m_internal_set;
+            for ( const auto& other_sequence : other.m_internal_set ) {
+                insert_k( tmp_set, other_sequence, k );
+            }
+            m_internal_set = tmp_set;
             return;
         }
         if ( other.m_internal_set.empty( ) )
         {
+            for ( const auto& other_sequence : m_internal_set ) {
+                insert_k( tmp_set, other_sequence, k );
+            }
+            m_internal_set = tmp_set;
             return;
         }
-        InternalSet tmp_set;
         for ( const auto& sequence : m_internal_set )
         {
             for ( const auto& other_sequence : other.m_internal_set )
