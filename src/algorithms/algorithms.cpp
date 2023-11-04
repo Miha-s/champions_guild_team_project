@@ -96,11 +96,6 @@ follow_k( const Grammar& grammar, int k )
                 auto it = std::find( right_side.begin( ), right_side.end( ), non_terminal );
                 SymbolsSet tmp_set;
 
-                if ( it == right_side.end( ) )
-                {
-                    tmp_set.insert( { grammar.epsilon( ) } );
-                    continue;
-                }
                 it++;
 
                 while ( it != right_side.end( ) )
