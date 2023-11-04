@@ -44,7 +44,9 @@ LL1Analyser::create_parsing_table( )
         {
             table[ non_terminal ][ terminal ] = SyntaxRule::InvalidRule( );
         }
+        table[ non_terminal ][ m_grammar->epsilon( ) ] = SyntaxRule::InvalidRule( );
     }
+
     for ( const auto& rule : m_grammar->get_grammar_rules( ) )
     {
         for ( const auto& terminal : m_grammar->get_terminals( ) )
@@ -53,6 +55,10 @@ LL1Analyser::create_parsing_table( )
             {
                 table[ rule->get_left_side( ) ][ terminal ] = rule;
             }
+        }
+        if ( rules_map[ rule ].contains( { m_grammar->epsilon( ) } ) )
+        {
+            table[ rule->get_left_side( ) ][ m_grammar->epsilon( ) ] = rule;
         }
     }
 

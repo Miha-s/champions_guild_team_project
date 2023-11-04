@@ -26,7 +26,7 @@ target_link_libraries(
 
 target_link_libraries(
         AlgorithmsTest
-        grammar
+        parsing
         GTest::gtest_main
 )
 

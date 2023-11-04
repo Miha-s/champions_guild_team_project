@@ -39,6 +39,7 @@ NonTerminal::operator==( const NonTerminal& other ) const
 std::shared_ptr< const NonTerminal >
 NonTerminal::InvalidNonTerminal( )
 {
-    static std::shared_ptr< const NonTerminal > invalid_non_terminal;
+    static std::shared_ptr< const NonTerminal > invalid_non_terminal( new NonTerminal( ) );
+
     return invalid_non_terminal;
 }

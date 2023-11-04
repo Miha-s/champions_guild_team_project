@@ -54,7 +54,6 @@ protected:
 
 TEST_F( LL1Test, test_of_parser )
 {
-    analyser = std::make_shared< LL1Analyser >(symbols_queue, dummy_output, grammar);
-    analyser->process();
+    analyser = std::make_shared< LL1Analyser >( symbols_queue, dummy_output, grammar );
+    analyser->process( );
 }
-
