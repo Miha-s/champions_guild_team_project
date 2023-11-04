@@ -51,5 +51,6 @@ jobs:
 
       - name: Run tests
         run: |
-          ctest --test-dir tests
+          cd build
+          ctest
         working-directory: src
