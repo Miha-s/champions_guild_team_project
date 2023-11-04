@@ -7,15 +7,19 @@
 template < class LexemType >
 class Queue
 {
+    using deque_t = std::deque<LexemType>;
+
 public:
     void push_lexem( const LexemType& lexem );
     LexemType pop_lexem( );
     LexemType peek_lexem( ) const;
+    typename deque_t::iterator begin( );
+    typename deque_t::iterator end( );
     std::vector< LexemType > peek_lexems( int amount ) const;
     std::size_t size( ) const;
 
 private:
-    std::deque< LexemType > deque;
+    deque_t deque;
 };
 
 template < class LexemType >
@@ -39,6 +43,20 @@ LexemType
 Queue< LexemType >::peek_lexem( ) const
 {
     return deque.front( );
+}
+
+template < class LexemType >
+typename Queue< LexemType >::deque_t::iterator
+Queue< LexemType >::begin( )
+{
+    return deque.begin( );
+}
+
+template < class LexemType >
+typename Queue< LexemType >::deque_t::iterator
+Queue< LexemType >::end( )
+{
+    return deque.end( );
 }
 
 template < class LexemType >

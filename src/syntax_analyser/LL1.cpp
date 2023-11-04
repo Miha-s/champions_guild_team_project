@@ -65,7 +65,7 @@ LL1Analyser::create_parsing_table( )
     return table;
 }
 
-SyntaxRules
+LL1Analyser::Result
 LL1Analyser::process_sequence( ParsingTable& table )
 {
     std::stack< SymbolPtr > current_stack;
@@ -126,7 +126,7 @@ LL1Analyser::set_failed_state( SymbolPtr expected, SymbolPtr real )
 {
     SymbolsSet expected_symbols;
     m_failed_state.expected.insert( { expected } );
-    m_failed_state.real = real;
+    m_failed_state.real = { real };
 }
 
 void
@@ -142,5 +142,5 @@ LL1Analyser::set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePt
         }
     }
 
-    m_failed_state.real = real;
+    m_failed_state.real = { real };
 }

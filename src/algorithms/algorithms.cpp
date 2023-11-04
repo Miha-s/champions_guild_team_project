@@ -81,6 +81,20 @@ first_k( const Grammar& grammar, int k, const Symbols& symbols )
     return result;
 }
 
+SymbolsSet
+first_k( const Grammar& grammar, int k, Symbols::const_iterator it_begin, Symbols::const_iterator it_end )
+{
+    NonTerminalWithTerminals firstSets = first_k( grammar, k );
+    SymbolsSet result;
+    for ( ; it_begin != it_end; )
+    {
+        result.add_k( firstSets[ *it_begin ], k );
+        std::advance( it_begin, 1 );
+    }
+
+    return result;
+}
+
 NonTerminalWithTerminals
 follow_k( const Grammar& grammar, int k )
 {
@@ -131,3 +145,5 @@ follow_k( const Grammar& grammar, int k )
 
     return followSets;
 }
+
+

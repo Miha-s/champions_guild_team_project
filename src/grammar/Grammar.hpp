@@ -15,6 +15,12 @@ public:
     {
     }
 
+    NonTerminalPtr
+    initial_symbol( ) const
+    {
+        return m_grammar_rules[ 0 ]->get_left_side( );
+    }
+
     TerminalPtr
     define( TerminalGroup group, TerminalSubgroup subgroup )
     {
@@ -100,6 +106,20 @@ public:
         for ( const auto& rule : m_grammar_rules )
         {
             if ( rule->contains( symbol ) )
+            {
+                tmp_rules.push_back( rule );
+            }
+        }
+        return tmp_rules;
+    }
+
+    SyntaxRules
+    syntax_rules_from_symbol( const SymbolPtr& symbol ) const
+    {
+        SyntaxRules tmp_rules;
+        for ( const auto& rule : m_grammar_rules )
+        {
+            if ( rule->get_left_side( ) == symbol )
             {
                 tmp_rules.push_back( rule );
             }
