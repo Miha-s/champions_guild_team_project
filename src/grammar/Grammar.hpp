@@ -15,33 +15,33 @@ public:
     {
     }
 
-    Terminal
+    TerminalPtr
     define( TerminalGroup group, TerminalSubgroup subgroup )
     {
         return m_grammar_symbols.define( group, subgroup );
     }
 
-    NonTerminal
+    NonTerminalPtr
     define( NonTerminalType type )
     {
         return m_grammar_symbols.define( type );
     }
 
-    Terminal
+    TerminalPtr
     create( TerminalGroup group, TerminalSubgroup subgroup ) const
     {
         return m_grammar_symbols.get_terminal( group, subgroup );
     }
 
-    NonTerminal
+    NonTerminalPtr
     create( NonTerminalType type ) const
     {
         return m_grammar_symbols.get_non_terminal( type );
     }
 
-    template < class... Symbols >
+    template < class... SymbolsT >
     void
-    add_rule( const Symbols&... symbols )
+    add_rule( const SymbolsT&... symbols )
     {
         m_grammar_rules.push_back( SyntaxRule{ m_rules_counter.get_next_id( ), symbols... } );
     }
@@ -56,7 +56,7 @@ public:
         return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
     }
 
-    std::unordered_set< NonTerminal, NonTerminalHash >
+    std::unordered_set< NonTerminalPtr >
     get_non_terminals( ) const
     {
         return this->m_grammar_symbols.non_terminals( );
@@ -68,35 +68,28 @@ public:
         return this->m_grammar_rules;
     }
 
-    Terminal
+    TerminalPtr
     get_terminal_by_id( int id ) const
     {
         auto it = std::find_if( this->m_grammar_symbols.terminals( ).cbegin( ),
                                 this->m_grammar_symbols.terminals( ).cend( ),
-                                [ id ]( const Terminal t ) { return t.id( ) == id; } );
+                                [ id ]( const TerminalPtr& t ) { return t->id( ) == id; } );
         return *it;
     }
 
-    NonTerminal
+    NonTerminalPtr
     get_non_terminal_by_id( int id ) const
     {
         auto it = std::find_if( this->m_grammar_symbols.non_terminals( ).cbegin( ),
                                 this->m_grammar_symbols.non_terminals( ).cend( ),
-                                [ id ]( const NonTerminal t ) { return t.id( ) == id; } );
+                                [ id ]( const NonTerminalPtr t ) { return t->id( ) == id; } );
         return *it;
     }
 
-    static bool
-    is_epsilon( Symbol symbol )
+    std::shared_ptr< const Epsilon >
+    epsilon( )
     {
-        if ( !symbol.is_terminal( ) )
-        {
-            return false;
-        }
-        else
-        {
-            return symbol == Terminal::EPSILON_TERMINAL;
-        }
+        return m_grammar_symbols.epsilon( );
     }
 
 private:

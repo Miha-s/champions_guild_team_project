@@ -1,7 +1,7 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include "Symbol.hpp"
 #include "SymbolType.hpp"
@@ -11,24 +11,19 @@ enum class TerminalGroup : SymbolId;
 
 enum class TerminalSubgroup : SymbolId;
 
-struct Position
-{
-    size_t row;
-    size_t column;
-};
-
 class Terminal : public Symbol
 {
-    using Type = SymbolType< TerminalGroup, TerminalSubgroup >;
-    Type m_type;
-
 public:
-    StringType word;
-    Position position;
+    using Type = SymbolType< TerminalGroup, TerminalSubgroup >;
+private:
+    const Type m_type;
+public:
 
     Terminal( );
 
     Type type( ) const;
+
+    bool is_terminal( ) const override;
 
     TerminalGroup group( ) const;
 
@@ -38,9 +33,7 @@ public:
 
     bool operator==( const Terminal& other ) const;
 
-    static const Terminal INVALID_TERMINAL;
-
-    static const Terminal EPSILON_TERMINAL;
+    static std::shared_ptr< const Terminal > InvalidTerminal( );
 
 protected:
     Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id );
@@ -149,20 +142,23 @@ enum class TerminalSubgroup : SymbolId
     ONELINE,
 };
 
-using Terminals = std::vector< Terminal >;
+using TerminalPtr = std::shared_ptr< const Terminal >;
+using Terminals = std::vector< TerminalPtr >;
 
-struct TerminalsHash {
-    size_t operator()(const Terminals& terminals) const {
+struct TerminalsHash
+{
+    size_t
+    operator( )( const Terminals& terminals ) const
+    {
         size_t hash = 0;
 
-        for (const Terminal& terminal : terminals) {
-            hash ^= TerminalHash{}(terminal);
+        for ( const auto& terminal : terminals )
+        {
+            hash ^= std::hash< TerminalPtr >{ }( terminal );
         }
 
         return hash;
     }
 };
-
-using TerminalsSet = std::unordered_set< Terminals, TerminalsHash >;
 
 #endif  // TERMINAL_HPP

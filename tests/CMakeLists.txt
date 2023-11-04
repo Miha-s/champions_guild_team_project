@@ -17,9 +17,9 @@ target_link_libraries(
 )
 
 target_link_libraries(
-    AlgorithmsTest
-    parsing
-    GTest::gtest_main
+  AlgorithmsTest
+  grammar
+  GTest::gtest_main
 )
 
 include(GoogleTest)

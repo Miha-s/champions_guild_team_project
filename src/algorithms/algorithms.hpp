@@ -3,7 +3,9 @@
 #include <unordered_map>
 #include "grammar/Grammar.hpp"
 
-using NonTerminalWithTerminals = std::unordered_map< NonTerminal, TerminalsSet, NonTerminalHash >;
+using TerminalsSet = std::unordered_set< Terminals, TerminalsHash >;
+
+using NonTerminalWithTerminals = std::unordered_map< NonTerminalPtr, TerminalsSet >;
 
 NonTerminalWithTerminals first_k( const Grammar& grammar, int k );
 NonTerminalWithTerminals follow_k( const Grammar& grammar, int k );

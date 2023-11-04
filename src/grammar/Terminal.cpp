@@ -1,29 +1,27 @@
 #include "Terminal.hpp"
 
-Terminal const Terminal::INVALID_TERMINAL = { TerminalGroup::INVALID,
-                                              TerminalSubgroup::INVALID,
-                                              INVALID_ID };
-
-Terminal const Terminal::EPSILON_TERMINAL = { TerminalGroup::OTHER,
-                                              TerminalSubgroup::EPSILON,
-                                              EPSILON_ID };
-
 Terminal::Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id )
-    : Symbol{ true, id }
+    : Symbol{ id }
     , m_type{ group, subgroup }
 {
 }
 
 Terminal::Terminal( )
-    : Symbol( INVALID_TERMINAL )
+    : Symbol( INVALID_ID )
+    , m_type( { TerminalGroup::INVALID, TerminalSubgroup::INVALID } )
 {
-    *this = INVALID_TERMINAL;
 }
 
 Terminal::Type
 Terminal::type( ) const
 {
     return m_type;
+}
+
+bool
+Terminal::is_terminal( ) const
+{
+    return true;
 }
 
 TerminalGroup
@@ -49,4 +47,11 @@ bool
 Terminal::operator==( const Terminal& other ) const
 {
     return m_type == other.m_type && Symbol::operator==( other );
+}
+
+std::shared_ptr< const Terminal >
+Terminal::InvalidTerminal( )
+{
+    static std::shared_ptr< const Terminal > invalid_terminal;
+    return invalid_terminal;
 }

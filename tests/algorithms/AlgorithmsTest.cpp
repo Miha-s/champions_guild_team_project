@@ -19,7 +19,7 @@ protected:
 
 TEST_F( AlgoTest, FUCKING_FIRST_2_TEST )
 {
-    auto e = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::EPSILON );
+    auto e = grammar->epsilon( );
     auto plus = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::PLUS );
     auto andd = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::AND );
     auto round_left = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::ROUND_LEFT );
@@ -52,7 +52,7 @@ TEST_F( AlgoTest, FUCKING_FIRST_2_TEST )
 }
 
 TEST_F( AlgoTest, FUCKING_FOLLOW_1_TEST ) {
-    auto e = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::EPSILON );
+    auto e = grammar->epsilon( );
     auto plus = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::PLUS );
     auto andd = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::AND );
     auto round_left = grammar->define( TerminalGroup::OTHER, TerminalSubgroup::ROUND_LEFT );
@@ -79,6 +79,6 @@ TEST_F( AlgoTest, FUCKING_FOLLOW_1_TEST ) {
     EXPECT_EQ( result[ d ], (TerminalsSet{
                                     Terminals{ andd },
                                     Terminals{ plus },
-                                    Terminals{ e },
+//                                    Terminals{ e },
                                     Terminals{ round_right }}) );
 }

@@ -9,8 +9,8 @@
 class SyntaxRule
 {
 public:
-    template < typename... Symbols >
-    SyntaxRule( SymbolId id, NonTerminal left_side, const Symbols&... right_side )
+    template < typename... SymbolsT >
+    SyntaxRule( SymbolId id, NonTerminalPtr left_side, const SymbolsT&... right_side )
         : m_id{ id }
         , m_left_side{ left_side }
         , m_right_side{ right_side... }
@@ -26,10 +26,10 @@ public:
     bool
     is_valid( ) const
     {
-        return m_id != INVALID_ID && m_left_side.is_valid( );
+        return m_id != INVALID_ID && m_left_side->is_valid( );
     }
 
-    NonTerminal
+    NonTerminalPtr
     get_left_side( ) const
     {
         return this->m_left_side;
@@ -38,15 +38,15 @@ public:
     Symbols
     get_right_side( ) const
     {
-        return this->m_right_side;
+        return m_right_side;
     }
 
 private:
     SymbolId m_id;
-    NonTerminal m_left_side;
+    NonTerminalPtr m_left_side;
     Symbols m_right_side;
 };
 
-static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, NonTerminal::INVALID_NON_TERMINAL };
+static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, NonTerminal::InvalidNonTerminal( ) };
 
 #endif  // SYNTAXRULE_H

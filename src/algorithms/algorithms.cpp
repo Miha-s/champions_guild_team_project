@@ -10,14 +10,6 @@ kAddition( const std::vector< std::unordered_set< Symbols, SymbolsHash > >& symb
         return { };
     }
 
-    for ( auto const& symbol_set : symbolLists )
-    {
-        if ( symbol_set.empty( ) )
-        {
-            return { };
-        }
-    }
-
     std::unordered_set< Symbols, SymbolsHash > result = symbolLists[ 0 ];
 
     for ( size_t i = 1; i < symbolLists.size( ); ++i )
@@ -28,7 +20,7 @@ kAddition( const std::vector< std::unordered_set< Symbols, SymbolsHash > >& symb
         {
             for ( Symbols next : symbolLists[ i ] )
             {
-                if ( current.size( ) == 1 && Grammar::is_epsilon( current.at( 0 ) ) )
+                if ( current.size( ) == 1 && current.at( 0 ) )
                 {
                     current.erase( current.begin( ) );
                 }
@@ -36,7 +28,7 @@ kAddition( const std::vector< std::unordered_set< Symbols, SymbolsHash > >& symb
                 Symbols combined;
                 combined.insert( combined.end( ), current.begin( ), current.end( ) );
 
-                if ( next.size( ) == 1 && Grammar::is_epsilon( next.at( 0 ) ) )
+                if ( next.size( ) == 1 && next.at( 0 )->is_epsilon( ) )
                 {
                     tempResult.insert( combined );
                     continue;
@@ -90,7 +82,7 @@ kAddition( const std::vector< TerminalsSet >& symbolLists, int k )
         {
             for ( Terminals next : symbolLists[ i ] )
             {
-                if ( current.size( ) == 1 && Grammar::is_epsilon( current.at( 0 ) ) )
+                if ( current.size( ) == 1 && current.at( 0 )->is_epsilon( ) )
                 {
                     current.erase( current.begin( ) );
                 }
@@ -98,7 +90,7 @@ kAddition( const std::vector< TerminalsSet >& symbolLists, int k )
                 Terminals combined;
                 combined.insert( combined.end( ), current.begin( ), current.end( ) );
 
-                if ( next.size( ) == 1 && Grammar::is_epsilon( next.at( 0 ) ) )
+                if ( next.size( ) == 1 && next.at( 0 )->is_epsilon( ) )
                 {
                     if (combined.empty()) {
                         tempResult.insert(next);
@@ -156,7 +148,7 @@ multiply( const std::vector< std::unordered_set< Symbols, SymbolsHash > >& symbo
         {
             for ( Symbols next : symbolLists[ i ] )
             {
-                if ( current.size( ) == 1 && Grammar::is_epsilon( current.at( 0 ) ) )
+                if ( current.size( ) == 1 && current.at( 0 )->is_epsilon( ) )
                 {
                     current.erase( current.begin( ) );
                 }
@@ -164,7 +156,7 @@ multiply( const std::vector< std::unordered_set< Symbols, SymbolsHash > >& symbo
                 Symbols combined;
                 combined.insert( combined.end( ), current.begin( ), current.end( ) );
 
-                if ( next.size( ) == 1 && Grammar::is_epsilon( next.at( 0 ) ) )
+                if ( next.size( ) == 1 && next.at( 0 )->is_epsilon( ) )
                 {
                     tempResult.insert( combined );
                     continue;
@@ -208,7 +200,7 @@ multiply( const std::vector< std::unordered_set< Terminals, TerminalsHash > >& s
         {
             for ( Terminals next : symbolLists[ i ] )
             {
-                if ( current.size( ) == 1 && Grammar::is_epsilon( current.at( 0 ) ) )
+                if ( current.size( ) == 1 && current.at( 0 )->is_epsilon( ) )
                 {
                     current.erase( current.begin( ) );
                 }
@@ -216,7 +208,7 @@ multiply( const std::vector< std::unordered_set< Terminals, TerminalsHash > >& s
                 Terminals combined;
                 combined.insert( combined.end( ), current.begin( ), current.end( ) );
 
-                if ( next.size( ) == 1 && Grammar::is_epsilon( next.at( 0 ) ) )
+                if ( next.size( ) == 1 && next.at( 0 )->is_epsilon( ) )
                 {
                     tempResult.insert( combined );
                     continue;
@@ -237,10 +229,10 @@ multiply( const std::vector< std::unordered_set< Terminals, TerminalsHash > >& s
 NonTerminalWithTerminals
 first_k( const Grammar& grammar, int k )
 {
-    std::unordered_map< Symbol, std::unordered_set< Symbols, SymbolsHash >, SymbolHash > firstSets =
-            std::unordered_map< Symbol, std::unordered_set< Symbols, SymbolsHash >, SymbolHash >{ };
+    std::unordered_map< SymbolPtr, std::unordered_set< Symbols, SymbolsHash > > firstSets =
+            std::unordered_map< SymbolPtr, std::unordered_set< Symbols, SymbolsHash > >{ };
 
-    for ( const NonTerminal& nonTerminal : grammar.get_non_terminals( ) )
+    for ( const auto& nonTerminal : grammar.get_non_terminals( ) )
     {
         firstSets[ nonTerminal ] = { };
     }
@@ -255,9 +247,9 @@ first_k( const Grammar& grammar, int k )
 
             std::vector< std::unordered_set< Symbols, SymbolsHash > > to_add_symbols;
 
-            for ( const Symbol& symbol : rightHandSide )
+            for ( const auto& symbol : rightHandSide )
             {
-                if ( symbol.is_terminal( ) )
+                if ( symbol->is_terminal( ) || symbol->is_epsilon( ) )
                 {
                     to_add_symbols.push_back(
                             std::unordered_set< Symbols, SymbolsHash >{ Symbols{ symbol } } );
@@ -282,7 +274,7 @@ first_k( const Grammar& grammar, int k )
     }
 
     NonTerminalWithTerminals result;
-    for ( const NonTerminal& nonTerminal : grammar.get_non_terminals( ) )
+    for ( const auto& nonTerminal : grammar.get_non_terminals( ) )
     {
         TerminalsSet terminals_set = TerminalsSet{ };
         for ( const auto& vector_of_symbols : firstSets[ nonTerminal ] )
@@ -290,7 +282,7 @@ first_k( const Grammar& grammar, int k )
             Terminals terminals;
             for ( const auto symbol : vector_of_symbols )
             {
-                terminals.push_back( grammar.get_terminal_by_id( symbol.id( ) ) );
+                terminals.push_back( grammar.get_terminal_by_id( symbol->id( ) ) );
             }
             terminals_set.insert( terminals );
         }
@@ -302,12 +294,9 @@ first_k( const Grammar& grammar, int k )
 NonTerminalWithTerminals
 follow_k( const Grammar& grammar, int k )
 {
-    std::unordered_map< NonTerminal,
-                        std::unordered_set< Terminals, TerminalsHash >,
-                        NonTerminalHash >
-            firstSets;
+    std::unordered_map< NonTerminalPtr, std::unordered_set< Terminals, TerminalsHash > > firstSets;
 
-    for ( const NonTerminal& nonTerminal : grammar.get_non_terminals( ) )
+    for ( const auto& nonTerminal : grammar.get_non_terminals( ) )
     {
         firstSets[ nonTerminal ] = { };
     }
@@ -327,18 +316,18 @@ follow_k( const Grammar& grammar, int k )
                         std::vector< TerminalsSet > result_of_first_k;
                         for ( int j = i + 1; j < rule_inner.get_right_side( ).size( ); j++ )
                         {
-                            if ( rule_inner.get_right_side( )[ j ].is_terminal( ) )
+                            if ( rule_inner.get_right_side( )[ j ]->is_terminal( ) )
                             {
                                 result_of_first_k.push_back( std::unordered_set< Terminals,
                                                                                  TerminalsHash >{
                                         Terminals{ grammar.get_terminal_by_id(
-                                                rule_inner.get_right_side( )[ j ].id( ) ) } } );
+                                                rule_inner.get_right_side( )[ j ]->id( ) ) } } );
                             }
                             else
                             {
                                 result_of_first_k.push_back(
                                         first_k( grammar, k )[ grammar.get_non_terminal_by_id(
-                                                rule_inner.get_right_side( )[ j ].id( ) ) ] );
+                                                rule_inner.get_right_side( )[ j ]->id( ) ) ] );
                             }
                         }
 
@@ -374,18 +363,18 @@ follow_k( const Grammar& grammar, int k )
                         std::vector< TerminalsSet > result_of_first_k;
                         for ( int j = i + 1; j < rule_inner.get_right_side( ).size( ); j++ )
                         {
-                            if ( rule_inner.get_right_side( )[ j ].is_terminal( ) )
+                            if ( rule_inner.get_right_side( )[ j ]->is_terminal( ) )
                             {
                                 result_of_first_k.push_back( std::unordered_set< Terminals,
                                                                                  TerminalsHash >{
                                         Terminals{ grammar.get_terminal_by_id(
-                                                rule_inner.get_right_side( )[ j ].id( ) ) } } );
+                                                rule_inner.get_right_side( )[ j ]->id( ) ) } } );
                             }
                             else
                             {
                                 result_of_first_k.push_back(
                                         first_k( grammar, k )[ grammar.get_non_terminal_by_id(
-                                                rule_inner.get_right_side( )[ j ].id( ) ) ] );
+                                                rule_inner.get_right_side( )[ j ]->id( ) ) ] );
                             }
                         }
 

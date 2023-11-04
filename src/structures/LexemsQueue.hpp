@@ -5,7 +5,7 @@
 #include <deque>
 
 template < class LexemType >
-class LexemsQueue
+class Queue
 {
 public:
     void push_lexem( const LexemType& lexem );
@@ -20,14 +20,14 @@ private:
 
 template < class LexemType >
 void
-LexemsQueue< LexemType >::push_lexem( const LexemType& lexem )
+Queue< LexemType >::push_lexem( const LexemType& lexem )
 {
     deque.push_back( lexem );
 }
 
 template < class LexemType >
 LexemType
-LexemsQueue< LexemType >::pop_lexem( )
+Queue< LexemType >::pop_lexem( )
 {
     auto elem = deque.front( );
     deque.pop_front( );
@@ -36,20 +36,20 @@ LexemsQueue< LexemType >::pop_lexem( )
 
 template < class LexemType >
 LexemType
-LexemsQueue< LexemType >::peek_lexem( ) const
+Queue< LexemType >::peek_lexem( ) const
 {
     deque.front( );
 }
 
 template < class LexemType >
 std::vector< LexemType >
-LexemsQueue< LexemType >::peek_lexems( int amount ) const
+Queue< LexemType >::peek_lexems( int amount ) const
 {
 }
 
 template < class LexemType >
 std::size_t
-LexemsQueue< LexemType >::size( ) const
+Queue< LexemType >::size( ) const
 {
     return deque.size( );
 }

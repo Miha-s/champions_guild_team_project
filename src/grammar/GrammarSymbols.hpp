@@ -10,19 +10,29 @@
 #include "Counter.hpp"
 #include "NonTerminal.hpp"
 #include "Terminal.hpp"
+#include "Epsilon.hpp"
 
 class GrammarSymbols
 {
     Counter m_counter;
-    using NonTerminalsSet = std::unordered_set< NonTerminal, NonTerminalHash >;
-    using TerminalsSet = std::unordered_set< Terminal, TerminalHash >;
+    using NonTerminalsSet = std::unordered_set< NonTerminalPtr >;
+    using TerminalsSet = std::unordered_set< TerminalPtr >;
     NonTerminalsSet m_non_terminals;
     TerminalsSet m_terminals;
+    std::shared_ptr< const Epsilon > m_epsilon;
 
 public:
     GrammarSymbols( )
+        : m_epsilon{ new Epsilon{} }
     {
     }
+
+    std::shared_ptr< const Epsilon >
+    epsilon( )
+    {
+        return m_epsilon;
+    }
+
 
     const NonTerminalsSet&
     non_terminals( ) const
@@ -36,14 +46,14 @@ public:
         return m_terminals;
     }
 
-    Terminal
+    TerminalPtr
     define( TerminalGroup group, TerminalSubgroup subgroup )
     {
         auto it = std::find_if( m_terminals.cbegin( ),
                                 m_terminals.cend( ),
-                                [ group, subgroup ]( const Terminal& terminal ) {
-                                    return terminal.group( ) == group
-                                           && terminal.subgroup( ) == subgroup;
+                                [ group, subgroup ]( const TerminalPtr& terminal ) {
+                                    return terminal->group( ) == group
+                                           && terminal->subgroup( ) == subgroup;
                                 } );
 
         if ( it != m_terminals.cend( ) )
@@ -51,35 +61,38 @@ public:
             return *it;
         }
 
-        auto new_symbol = m_terminals.insert( { group, subgroup, m_counter.get_next_id( ) } );
+        auto new_symbol = m_terminals.insert(
+                TerminalPtr{ new Terminal{ group, subgroup, m_counter.get_next_id( ) } } );
         return *new_symbol.first;
     }
 
-    NonTerminal
+    NonTerminalPtr
     define( NonTerminalType type )
     {
-        auto it = std::find_if(
-                m_non_terminals.cbegin( ),
-                m_non_terminals.cend( ),
-                [ type ]( const NonTerminal& non_terminal ) { return non_terminal.m_type == type; } );
+        auto it = std::find_if( m_non_terminals.cbegin( ),
+                                m_non_terminals.cend( ),
+                                [ type ]( const NonTerminalPtr& non_terminal ) {
+                                    return non_terminal->m_type == type;
+                                } );
 
         if ( it != m_non_terminals.cend( ) )
         {
             return *it;
         }
 
-        auto new_symbol = m_non_terminals.insert( { type, m_counter.get_next_id( ) } );
+        auto new_symbol = m_non_terminals.insert(
+                NonTerminalPtr{ new NonTerminal{ type, m_counter.get_next_id( ) } } );
         return *new_symbol.first;
     }
 
-    Terminal
+    TerminalPtr
     get_terminal( TerminalGroup group, TerminalSubgroup subgroup ) const
     {
         auto it = std::find_if( m_terminals.cbegin( ),
                                 m_terminals.cend( ),
-                                [ group, subgroup ]( const Terminal& terminal ) {
-                                    return terminal.group( ) == group
-                                           && terminal.subgroup( ) == subgroup;
+                                [ group, subgroup ]( const TerminalPtr& terminal ) {
+                                    return terminal->group( ) == group
+                                           && terminal->subgroup( ) == subgroup;
                                 } );
 
         if ( it != m_terminals.cend( ) )
@@ -87,23 +100,24 @@ public:
             return *it;
         }
 
-        return Terminal::INVALID_TERMINAL;
+        return Terminal::InvalidTerminal( );
     }
 
-    NonTerminal
+    NonTerminalPtr
     get_non_terminal( NonTerminalType type ) const
     {
-        auto it = std::find_if(
-                m_non_terminals.cbegin( ),
-                m_non_terminals.cend( ),
-                [ type ]( const NonTerminal& non_terminal ) { return non_terminal.m_type == type; } );
+        auto it = std::find_if( m_non_terminals.cbegin( ),
+                                m_non_terminals.cend( ),
+                                [ type ]( const NonTerminalPtr& non_terminal ) {
+                                    return non_terminal->m_type == type;
+                                } );
 
         if ( it != m_non_terminals.cend( ) )
         {
             return *it;
         }
 
-        return NonTerminal::INVALID_NON_TERMINAL;
+        return NonTerminal::InvalidNonTerminal( );
     }
 };
 
