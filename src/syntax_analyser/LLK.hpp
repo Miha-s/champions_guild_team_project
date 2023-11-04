@@ -1,8 +1,9 @@
 #ifndef LLK_H
 #define LLK_H
 #include <unordered_map>
-#include "algorithms/algorithms.hpp"
+
 #include "SyntaxAnalyser.hpp"
+#include "algorithms/algorithms.hpp"
 
 class LLKAnalyser : public SyntaxAnalyser
 {
@@ -15,7 +16,8 @@ class LLKAnalyser : public SyntaxAnalyser
         LLKTablePtr table;
     };
 
-    struct LLKTableElement {
+    struct LLKTableElement
+    {
         SyntaxRulePtr syntax_rule;
         std::vector< LLKElement > elements;
     };
@@ -28,9 +30,12 @@ class LLKAnalyser : public SyntaxAnalyser
 
 public:
     // SymbolsQueuePtr must have epsilon at the end
-    LLKAnalyser( SymbolsQueuePtr symbols_queue, OutputStreamPtr output_stream, GrammarPtr grammar, size_t k );
+    LLKAnalyser( SymbolsQueuePtr symbols_queue,
+                 OutputStreamPtr output_stream,
+                 GrammarPtr grammar,
+                 size_t k );
 
-    void process(  ) override;
+    void process( ) override;
 
 private:
     struct ParsingTableStackElement
@@ -41,15 +46,13 @@ private:
     };
 
     LLKTablePtr create_parsing_table( );
-    Result process_sequence( LLKTableElement first_element );
+    Result process_sequence( LLKElement first_element );
     void set_failed_state( SymbolPtr expected, SymbolPtr real );
-    void set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
-                           SymbolPtr real );
+    void set_failed_state( const LLKTablePtr& expected, Symbols real );
 
-    LLKTablePtr empty_table() const;
+    LLKTablePtr empty_table( ) const;
 
     size_t k;
-
 };
 
-#endif // LLK_H
+#endif  // LLK_H

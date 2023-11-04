@@ -14,6 +14,10 @@ LLKAnalyser::LLKAnalyser( SymbolsQueuePtr symbols_queue,
 void
 LLKAnalyser::process( )
 {
+    auto table = create_parsing_table( );
+    LLKElement first_element;
+    first_element.table = table;
+    process_sequence( first_element );
 }
 
 LLKAnalyser::LLKTablePtr
@@ -99,10 +103,11 @@ LLKAnalyser::create_parsing_table( )
 }
 
 SyntaxAnalyser::Result
-LLKAnalyser::process_sequence( LLKTableElement first_element )
+LLKAnalyser::process_sequence( LLKElement first_element )
 {
-    std::stack< LLKTableElement > processing_stack;
+    std::stack< LLKElement > processing_stack;
     SymbolsQueue current_symbols;
+    SyntaxRules rules;
 
     for ( int i = 0; i < k; i++ )
     {
@@ -116,7 +121,63 @@ LLKAnalyser::process_sequence( LLKTableElement first_element )
 
     processing_stack.push( first_element );
 
-    while()
+    while ( processing_stack.size( ) > 0 && current_symbols.size( ) > 0 )
+    {
+        auto current_element = processing_stack.top( );
+        if ( current_element.symbol )
+        {
+            if ( current_element.symbol == current_symbols.peek_lexem( ) )
+            {
+                current_symbols.pop_lexem( );
+                processing_stack.pop( );
+                continue;
+            }
+            else
+            {
+                set_failed_state( current_element.symbol, current_symbols.peek_lexem( ) );
+            }
+        }
+        auto current_symbols_sequence = Symbols{ current_symbols.begin( ), current_symbols.end( ) };
+        auto table_element = current_element.table->map[ current_symbols_sequence ];
+
+        if ( !table_element.syntax_rule )
+        {
+            set_failed_state( current_element.table, current_symbols_sequence );
+        }
+
+        rules.push_back( table_element.syntax_rule );
+
+        std::for_each(
+                table_element.elements.crbegin( ),
+                table_element.elements.crend( ),
+                [ &processing_stack ]( const LLKElement& sym ) { processing_stack.push( sym ); } );
+
+        if ( processing_stack.size( ) > 1 && current_element.symbol
+             && current_element.symbol->is_epsilon( ) )
+        {
+            processing_stack.pop( );
+        }
+    }
+
+    return rules;
+}
+
+void
+LLKAnalyser::set_failed_state( SymbolPtr expected, SymbolPtr real )
+{
+    SymbolsSet expected_symbols;
+    m_failed_state.expected.insert( { expected } );
+    m_failed_state.real = { real };
+}
+
+void
+LLKAnalyser::set_failed_state( const LLKTablePtr& expected, Symbols real )
+{
+    for ( const auto& symbols : expected->map )
+    {
+        m_failed_state.expected.insert( symbols.first );
+    }
+    m_failed_state.real = real;
 }
 
 LLKAnalyser::LLKTablePtr

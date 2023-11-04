@@ -17,7 +17,7 @@ public:
     struct FailedState
     {
         SymbolsSet expected;
-        SymbolPtr real;
+        Symbols real;
     };
     using Result = SyntaxRules;
 
