@@ -4,7 +4,6 @@
 
 #include "algorithms/algorithms.hpp"
 #include "syntax_analyser/LL1.hpp"
-#include "syntax_analyser/SyntaxAnalyser.hpp"
 
 class LL1Test : public testing::Test
 {
@@ -53,7 +52,7 @@ protected:
     OutputStreamPtr dummy_output;
 };
 
-TEST_F( LL1Test, Testfd )
+TEST_F( LL1Test, test_of_parser )
 {
     analyser = std::make_shared< LL1Analyser >(symbols_queue, dummy_output, grammar);
     analyser->process();

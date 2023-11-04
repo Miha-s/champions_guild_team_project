@@ -106,6 +106,11 @@ LL1Analyser::process_sequence( ParsingTable& table )
         std::for_each( right_side.crbegin( ),
                        right_side.crend( ),
                        [ &current_stack ]( const SymbolPtr& sym ) { current_stack.push( sym ); } );
+
+        if ( current_stack.size( ) > 1 && stack_symbol->is_epsilon( ) )
+        {
+            current_stack.pop();
+        }
     }
     return rules;
 }
