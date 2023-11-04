@@ -5,7 +5,6 @@ int
 main( )
 {
     Grammar golang;
-
     auto a = golang.define( TerminalGroup::NUMERIC, TerminalSubgroup::HEX );
     auto b = golang.define( TerminalGroup::NUMERIC, TerminalSubgroup::DECIMAL );
     auto c = NonTerminal::InvalidNonTerminal( );
