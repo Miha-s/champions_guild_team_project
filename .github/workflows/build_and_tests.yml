@@ -46,3 +46,4 @@ jobs:
 
       - name: Run tests
         run: ./.github/workflows/tests.sh
+
