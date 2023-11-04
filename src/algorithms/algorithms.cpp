@@ -2,6 +2,19 @@
 
 #include "vector"
 
+bool
+check_for_empty_set( const Symbols& symbols, const NonTerminalWithTerminals& map )
+{
+    for ( const auto& symbol : symbols )
+    {
+        if ( map.at( symbol ).size( ) == 0 )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 NonTerminalWithTerminals
 first_k( const Grammar& grammar, int k )
 {
@@ -27,12 +40,17 @@ first_k( const Grammar& grammar, int k )
     while ( updated )
     {
         updated = false;
-        for ( const SyntaxRule& rule : grammar.get_grammar_rules( ) )
+        for ( const auto& rule : grammar.get_grammar_rules( ) )
         {
-            const auto& rightHandSide = rule.get_right_side( );
+            const auto& rightHandSide = rule->get_right_side( );
             SymbolsSet tmp_rule_set;
-            auto& current_rule_set = firstSets[ rule.get_left_side( ) ];
+            auto& current_rule_set = firstSets[ rule->get_left_side( ) ];
             auto initia_size = current_rule_set.size( );
+
+            if ( check_for_empty_set( rule->get_right_side( ), firstSets ) )
+            {
+                continue;
+            }
 
             for ( const auto& symbol : rightHandSide )
             {
@@ -74,10 +92,11 @@ follow_k( const Grammar& grammar, int k )
             auto rules = grammar.syntax_rules_with_symbol( non_terminal );
             for ( const auto& rule : rules )
             {
-                const auto& right_side = rule.get_right_side( );
+                const auto& right_side = rule->get_right_side( );
                 auto it = std::find( right_side.begin( ), right_side.end( ), non_terminal );
-                it++;
                 SymbolsSet tmp_set;
+
+                it++;
 
                 while ( it != right_side.end( ) )
                 {
@@ -85,9 +104,16 @@ follow_k( const Grammar& grammar, int k )
                     it++;
                 }
 
-                tmp_set.add_k( followSets[ rule.get_left_side( ) ], k );
+                tmp_set.add_k( followSets[ rule->get_left_side( ) ], k );
+
+                auto init_size = followSets[ non_terminal ].size( );
 
                 followSets[ non_terminal ].unite_with( tmp_set );
+
+                if ( init_size < followSets[ non_terminal ].size( ) )
+                {
+                    updated = true;
+                }
             }
         }
     }
