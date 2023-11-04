@@ -51,6 +51,9 @@ jobs:
 
       - name: Run tests
         run: |
-          cd build
+          mkdir -p build/tests
+          cd build/tests
+          cmake ../../tests
+          make
           ctest
         working-directory: src
