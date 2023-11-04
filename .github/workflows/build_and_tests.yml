@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: build
+          path: src/build
 
   tests:
     runs-on: ubuntu-latest
