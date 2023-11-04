@@ -33,7 +33,7 @@ public:
     void process(  ) override;
 
 private:
-    struct ParsingStackElement
+    struct ParsingTableStackElement
     {
         LLKTablePtr table;
         SymbolPtr symbol;
@@ -41,6 +41,7 @@ private:
     };
 
     LLKTablePtr create_parsing_table( );
+    Result process_sequence( LLKTableElement first_element );
     void set_failed_state( SymbolPtr expected, SymbolPtr real );
     void set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
                            SymbolPtr real );

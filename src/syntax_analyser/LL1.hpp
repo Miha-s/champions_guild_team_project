@@ -17,7 +17,7 @@ public:
 
 private:
     ParsingTable create_parsing_table( );
-    SyntaxRules process_sequence( ParsingTable& table );
+    Result process_sequence( ParsingTable& table );
     void set_failed_state( SymbolPtr expected, SymbolPtr real );
     void set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
                            SymbolPtr real );

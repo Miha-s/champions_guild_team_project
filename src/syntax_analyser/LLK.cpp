@@ -11,32 +11,33 @@ LLKAnalyser::LLKAnalyser( SymbolsQueuePtr symbols_queue,
 {
 }
 
-void LLKAnalyser::process()
+void
+LLKAnalyser::process( )
 {
-
 }
 
 LLKAnalyser::LLKTablePtr
 LLKAnalyser::create_parsing_table( )
 {
-    std::stack< ParsingStackElement > parsing_stack;
-    ParsingStackElement initial;
+    std::stack< ParsingTableStackElement > parsing_stack;
+    ParsingTableStackElement initial;
     initial.table = empty_table( );
     initial.symbol = m_grammar->initial_symbol( );
     SymbolsSet l;
     l.insert( { m_grammar->epsilon( ) } );
     initial.l = l;
 
-    std::vector< ParsingStackElement > parsed_tables;
+    std::vector< ParsingTableStackElement > parsed_tables;
+    parsed_tables.push_back( initial );
 
-    auto find_in_existing_tables =
-            [ &parsed_tables ]( const SymbolPtr& sym, const SymbolsSet& sym_set ) {
-                return std::find_if( parsed_tables.begin( ),
-                                     parsed_tables.end( ),
-                                     [ & ]( const ParsingStackElement& el ) {
-                                         return el.l == sym_set && el.symbol == sym;
-                                     } );
-            };
+    auto find_in_existing_tables = [ &parsed_tables ]( const SymbolPtr& sym,
+                                                       const SymbolsSet& sym_set ) {
+        return std::find_if( parsed_tables.begin( ),
+                             parsed_tables.end( ),
+                             [ & ]( const ParsingTableStackElement& el ) {
+                                 return el.l == sym_set && el.symbol == sym;
+                             } );
+    };
 
     bool updated = true;
     while ( updated )
@@ -61,10 +62,11 @@ LLKAnalyser::create_parsing_table( )
                     table_element.elements.push_back( llk_element );
                     continue;
                 }
+
                 auto l_next = first_k( *m_grammar, k, symbol_it++, right_side.end( ) );
                 l_next.add_k( parsing_table.l, k );
 
-                ParsingStackElement next_table;
+                ParsingTableStackElement next_table;
                 next_table.l = l_next;
                 next_table.table = empty_table( );
                 next_table.symbol = *symbol_it;
@@ -80,6 +82,7 @@ LLKAnalyser::create_parsing_table( )
                     updated = true;
                     llk_element.table = next_table.table;
                     parsing_stack.push( next_table );
+                    parsed_tables.push_back( next_table );
                 }
 
                 table_element.elements.push_back( llk_element );
@@ -89,12 +92,31 @@ LLKAnalyser::create_parsing_table( )
             {
                 parsing_table.table->map[ sequence ] = table_element;
             }
-
-            parsed_tables.push_back( parsing_table );
         }
     }
 
     return initial.table;
+}
+
+SyntaxAnalyser::Result
+LLKAnalyser::process_sequence( LLKTableElement first_element )
+{
+    std::stack< LLKTableElement > processing_stack;
+    SymbolsQueue current_symbols;
+
+    for ( int i = 0; i < k; i++ )
+    {
+        if ( m_queue->size( ) == 0 )
+        {
+            break;
+        }
+        current_symbols.push_lexem( m_queue->peek_lexem( ) );
+        m_queue->pop_lexem( );
+    }
+
+    processing_stack.push( first_element );
+
+    while()
 }
 
 LLKAnalyser::LLKTablePtr

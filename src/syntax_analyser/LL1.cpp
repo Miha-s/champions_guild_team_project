@@ -65,7 +65,7 @@ LL1Analyser::create_parsing_table( )
     return table;
 }
 
-SyntaxRules
+LL1Analyser::Result
 LL1Analyser::process_sequence( ParsingTable& table )
 {
     std::stack< SymbolPtr > current_stack;
