@@ -62,6 +62,12 @@ public:
         return this->m_grammar_symbols.non_terminals( );
     }
 
+    std::unordered_set< TerminalPtr >
+    get_terminals( ) const
+    {
+        return m_grammar_symbols.terminals( );
+    }
+
     std::vector< SyntaxRule >
     get_grammar_rules( ) const
     {
@@ -86,15 +92,29 @@ public:
         return *it;
     }
 
-    std::shared_ptr< const Epsilon >
-    epsilon( )
+    SyntaxRules
+    syntax_rules_with_symbol( const SymbolPtr& symbol ) const
+    {
+        SyntaxRules tmp_rules;
+        for ( const auto& rule : m_grammar_rules )
+        {
+            if ( rule.contains( symbol ) )
+            {
+                tmp_rules.push_back( rule );
+            }
+        }
+        return tmp_rules;
+    }
+
+    EpsilonPtr
+    epsilon( ) const
     {
         return m_grammar_symbols.epsilon( );
     }
 
 private:
     Counter m_rules_counter;
-    std::vector< SyntaxRule > m_grammar_rules;
+    SyntaxRules m_grammar_rules;
     GrammarSymbols m_grammar_symbols;
 };
 

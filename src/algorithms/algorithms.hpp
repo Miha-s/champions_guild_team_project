@@ -2,10 +2,11 @@
 #define ALGORITHMS_HPP
 #include <unordered_map>
 #include "grammar/Grammar.hpp"
+#include "grammar/TypesSet.hpp"
 
-using TerminalsSet = std::unordered_set< Terminals, TerminalsHash >;
+using SymbolsSet = TypesSet< Symbols, SymbolsHash >;
 
-using NonTerminalWithTerminals = std::unordered_map< NonTerminalPtr, TerminalsSet >;
+using NonTerminalWithTerminals = std::unordered_map< SymbolPtr, SymbolsSet >;
 
 NonTerminalWithTerminals first_k( const Grammar& grammar, int k );
 NonTerminalWithTerminals follow_k( const Grammar& grammar, int k );

@@ -19,4 +19,6 @@ protected:
     }
 };
 
+using EpsilonPtr = std::shared_ptr< const Epsilon >;
+
 #endif  // EPSILON_HPP

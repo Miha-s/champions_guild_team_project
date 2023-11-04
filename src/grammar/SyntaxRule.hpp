@@ -41,6 +41,19 @@ public:
         return m_right_side;
     }
 
+    bool
+    contains( const SymbolPtr& symbol ) const
+    {
+        for ( const auto& item : m_right_side )
+        {
+            if ( item == symbol )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 private:
     SymbolId m_id;
     NonTerminalPtr m_left_side;
@@ -48,5 +61,6 @@ private:
 };
 
 static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, NonTerminal::InvalidNonTerminal( ) };
+using SyntaxRules = std::vector< SyntaxRule >;
 
 #endif  // SYNTAXRULE_H
