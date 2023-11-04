@@ -45,5 +45,5 @@ jobs:
           path: build
 
       - name: Run tests
-        run: ./.github/workflows/tests.sh
+        run: sudo ./.github/workflows/tests.sh
 
