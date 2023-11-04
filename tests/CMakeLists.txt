@@ -16,7 +16,7 @@ add_executable(
 add_executable(
         LL1Test
         parser/LL1Test.cpp
-)
+        )
 
 target_link_libraries(
         LexerTest

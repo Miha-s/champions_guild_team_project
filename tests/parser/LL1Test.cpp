@@ -32,12 +32,11 @@ protected:
         grammar->add_rule( s, b, a );
         grammar->add_rule( a, plus, b, a );
         grammar->add_rule( a, e );
-        grammar->add_rule( c, e );
-        grammar->add_rule( d, a_terminal );
         grammar->add_rule( b, d, c );
         grammar->add_rule( c, andd, d, c );
-        grammar->add_rule( c, andd, d, c );
+        grammar->add_rule( c, e );
         grammar->add_rule( d, round_left, s, round_right );
+        grammar->add_rule( d, a_terminal );
         symbols_queue->push_lexem( round_left );
         symbols_queue->push_lexem( a_terminal );
         symbols_queue->push_lexem( plus );

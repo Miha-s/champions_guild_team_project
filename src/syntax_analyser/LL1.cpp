@@ -38,6 +38,13 @@ LL1Analyser::create_parsing_table( )
     }
 
     ParsingTable table;
+    for ( const auto& non_terminal : m_grammar->get_non_terminals( ) )
+    {
+        for ( const auto& terminal : m_grammar->get_terminals( ) )
+        {
+            table[ non_terminal ][ terminal ] = SyntaxRule::InvalidRule( );
+        }
+    }
     for ( const auto& rule : m_grammar->get_grammar_rules( ) )
     {
         for ( const auto& terminal : m_grammar->get_terminals( ) )
@@ -45,10 +52,6 @@ LL1Analyser::create_parsing_table( )
             if ( rules_map[ rule ].contains( { terminal } ) )
             {
                 table[ rule->get_left_side( ) ][ terminal ] = rule;
-            }
-            else
-            {
-                table[ rule->get_left_side( ) ][ terminal ] = SyntaxRule::InvalidRule( );
             }
         }
     }
