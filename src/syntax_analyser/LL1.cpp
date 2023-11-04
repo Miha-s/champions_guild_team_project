@@ -38,6 +38,15 @@ LL1Analyser::create_parsing_table( )
     }
 
     ParsingTable table;
+    for ( const auto& non_terminal : m_grammar->get_non_terminals( ) )
+    {
+        for ( const auto& terminal : m_grammar->get_terminals( ) )
+        {
+            table[ non_terminal ][ terminal ] = SyntaxRule::InvalidRule( );
+        }
+        table[ non_terminal ][ m_grammar->epsilon( ) ] = SyntaxRule::InvalidRule( );
+    }
+
     for ( const auto& rule : m_grammar->get_grammar_rules( ) )
     {
         for ( const auto& terminal : m_grammar->get_terminals( ) )
@@ -46,10 +55,10 @@ LL1Analyser::create_parsing_table( )
             {
                 table[ rule->get_left_side( ) ][ terminal ] = rule;
             }
-            else
-            {
-                table[ rule->get_left_side( ) ][ terminal ] = SyntaxRule::InvalidRule( );
-            }
+        }
+        if ( rules_map[ rule ].contains( { m_grammar->epsilon( ) } ) )
+        {
+            table[ rule->get_left_side( ) ][ m_grammar->epsilon( ) ] = rule;
         }
     }
 
@@ -103,6 +112,11 @@ LL1Analyser::process_sequence( ParsingTable& table )
         std::for_each( right_side.crbegin( ),
                        right_side.crend( ),
                        [ &current_stack ]( const SymbolPtr& sym ) { current_stack.push( sym ); } );
+
+        if ( current_stack.size( ) > 1 && stack_symbol->is_epsilon( ) )
+        {
+            current_stack.pop();
+        }
     }
     return rules;
 }
