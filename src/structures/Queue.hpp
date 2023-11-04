@@ -38,7 +38,7 @@ template < class LexemType >
 LexemType
 Queue< LexemType >::peek_lexem( ) const
 {
-    deque.front( );
+    return deque.front( );
 }
 
 template < class LexemType >
