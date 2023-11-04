@@ -4,6 +4,7 @@
 #include "structures/Queue.hpp"
 #include "grammar/Symbol.hpp"
 #include "grammar/Grammar.hpp"
+#include "algorithms/algorithms.hpp"
 
 using SymbolsQueue = Queue< SymbolPtr >;
 using SymbolsQueuePtr = std::shared_ptr< SymbolsQueue >;
@@ -13,8 +14,12 @@ using GrammarPtr = std::shared_ptr< Grammar >;
 class SyntaxAnalyser
 {
 public:
-    using FailedState = int;
-    using Result = int;
+    struct FailedState
+    {
+        SymbolsSet expected;
+        SymbolPtr real;
+    };
+    using Result = SyntaxRules;
 
     SyntaxAnalyser( SymbolsQueuePtr symbols_queue,
                     OutputStreamPtr output_stream,
@@ -26,13 +31,31 @@ public:
     }
 
     virtual void process( ) = 0;
-    virtual bool successfully_parsed( ) const = 0;
-    virtual FailedState get_failed_state( ) const = 0;
-    virtual Result get_result( ) const = 0;
+
+    bool
+    successfully_parsed( ) const
+    {
+        return m_failed_state.expected.size( ) == 0;
+    };
+
+    FailedState
+    get_failed_state( ) const
+    {
+        return m_failed_state;
+    }
+
+    virtual Result
+    get_result( ) const
+    {
+        return m_result;
+    }
+
 protected:
     SymbolsQueuePtr m_queue;
     OutputStreamPtr m_output;
     GrammarPtr m_grammar;
+    FailedState m_failed_state;
+    Result m_result;
 };
 
 #endif  // SYNTAXANALYSER_HPP

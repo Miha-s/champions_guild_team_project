@@ -45,6 +45,12 @@ public:
         }
     }
 
+    bool
+    contains( const T& value ) const
+    {
+        return m_internal_set.count( value ) > 0;
+    }
+
     void
     add_k( const ClassType& other, std::size_t k )
     {
