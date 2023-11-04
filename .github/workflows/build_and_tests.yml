@@ -23,7 +23,7 @@ jobs:
         shell: bash
 
       - name: Build the project
-        run: ./build.sh
+        run: ./src/.github/workflows/build.sh
 
       - name: Save build artifacts
         uses: actions/upload-artifact@v3
@@ -45,4 +45,4 @@ jobs:
           path: build
 
       - name: Run tests
-        run: ./tests.sh
+        run: ./src/.github/workflows/tests.sh
