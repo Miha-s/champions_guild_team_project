@@ -28,7 +28,7 @@ public:
     }
 
     std::shared_ptr< const Epsilon >
-    epsilon( )
+    epsilon( ) const
     {
         return m_epsilon;
     }
