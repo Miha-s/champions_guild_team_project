@@ -43,17 +43,18 @@ public:
     void
     add_rule( const SymbolsT&... symbols )
     {
-        m_grammar_rules.push_back( SyntaxRule{ m_rules_counter.get_next_id( ), symbols... } );
+        m_grammar_rules.push_back(
+                std::make_shared< SyntaxRule >( m_rules_counter.get_next_id( ), symbols... ) );
     }
 
-    SyntaxRule
+    SyntaxRulePtr
     get_rule( SymbolId id ) const
     {
         auto it = std::find_if( m_grammar_rules.cbegin( ),
                                 m_grammar_rules.cend( ),
-                                [ id ]( const SyntaxRule& rule ) { return rule.id( ) == id; } );
+                                [ id ]( const SyntaxRulePtr& rule ) { return rule->id( ) == id; } );
 
-        return it == m_grammar_rules.end( ) ? INVALID_RULE : *it;
+        return it == m_grammar_rules.end( ) ? SyntaxRule::InvalidRule( ) : *it;
     }
 
     std::unordered_set< NonTerminalPtr >
@@ -68,7 +69,7 @@ public:
         return m_grammar_symbols.terminals( );
     }
 
-    std::vector< SyntaxRule >
+    SyntaxRules
     get_grammar_rules( ) const
     {
         return this->m_grammar_rules;
@@ -98,7 +99,7 @@ public:
         SyntaxRules tmp_rules;
         for ( const auto& rule : m_grammar_rules )
         {
-            if ( rule.contains( symbol ) )
+            if ( rule->contains( symbol ) )
             {
                 tmp_rules.push_back( rule );
             }

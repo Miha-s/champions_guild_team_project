@@ -54,13 +54,21 @@ public:
         return false;
     }
 
+    static std::shared_ptr< const SyntaxRule >
+    InvalidRule( )
+    {
+        static std::shared_ptr< const SyntaxRule > invalid_rule(
+                new SyntaxRule( INVALID_ID, NonTerminal::InvalidNonTerminal( ) ) );
+        return invalid_rule;
+    }
+
 private:
-    SymbolId m_id;
+    SymbolId m_id = INVALID_ID;
     NonTerminalPtr m_left_side;
     Symbols m_right_side;
 };
 
-static const SyntaxRule INVALID_RULE = SyntaxRule{ INVALID_ID, NonTerminal::InvalidNonTerminal( ) };
-using SyntaxRules = std::vector< SyntaxRule >;
+using SyntaxRulePtr = std::shared_ptr< const SyntaxRule >;
+using SyntaxRules = std::vector< SyntaxRulePtr >;
 
 #endif  // SYNTAXRULE_H

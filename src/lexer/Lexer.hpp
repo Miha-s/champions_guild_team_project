@@ -2,7 +2,7 @@
 #define LEXER_HPP
 #include <iostream>
 #include <memory>
-#include "structures/LexemsQueue.hpp"
+#include "structures/Queue.hpp"
 #include "Lexem.hpp"
 #include "grammar/Grammar.hpp"
 #include "structures/InputCountingDecorator.hpp"
