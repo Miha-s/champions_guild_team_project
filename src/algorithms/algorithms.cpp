@@ -24,7 +24,7 @@ operator<<( std::ostream& os, const SymbolSymbolsMap& map )
     os << "{" << std::endl;
     for ( const auto& el : map )
     {
-        os << "(" << el.first << ": " << el.second << ")" << std::endl;
+        os << "[" << el.first << ": " << el.second << "]" << std::endl;
     }
     os << "}";
     return os;
@@ -135,7 +135,7 @@ follow_k( const Grammar& grammar, int k )
     SymbolsSet initial_set;
     initial_set.insert( { grammar.epsilon( ) } );
 
-    followSets[ *grammar.get_non_terminals( ).begin( ) ] = initial_set;
+    followSets[ grammar.initial_symbol( ) ] = initial_set;
 
     bool updated = true;
     while ( updated )
@@ -146,6 +146,10 @@ follow_k( const Grammar& grammar, int k )
             auto rules = grammar.syntax_rules_with_symbol( non_terminal );
             for ( const auto& rule : rules )
             {
+                if ( followSets[ rule->get_left_side( ) ].size( ) == 0 )
+                {
+                    continue;
+                }
                 const auto& right_side = rule->get_right_side( );
                 auto it = std::find( right_side.begin( ), right_side.end( ), non_terminal );
                 SymbolsSet tmp_set;
@@ -174,4 +178,43 @@ follow_k( const Grammar& grammar, int k )
     return followSets;
 }
 
+Symbols substiture_rule(const Symbols& symbols, const SyntaxRulePtr& rule) {
+    Symbols result;
+    bool found = false;
+    for ( const auto& sym : symbols )
+    {
+        if ( !found && sym->is_non_terminal( ) )
+        {
+            auto right_side = rule->get_right_side( );
+            if ( !( right_side.size( ) == 1 && right_side[ 0 ]->is_epsilon( ) ) ) {
+                result.insert( result.end( ), right_side.begin( ), right_side.end( ) );
+            }
+            found = true;
+        }
+        else
+        {
+            result.push_back( sym );
+        }
+    }
 
+    return result;
+}
+
+void
+expand_rules_sequence( const Grammar& grammar, std::ostream& os, const SyntaxRules& rules )
+{
+    Symbols current_symbols = { grammar.initial_symbol( ) };
+
+    os << current_symbols << " ->\n";
+
+    for ( const auto& rule : rules )
+    {
+        current_symbols = substiture_rule( current_symbols, rule );
+        os << current_symbols;
+        if ( rule != rules.back( ) )
+        {
+            os << " ->\n";
+            ;
+        }
+    }
+}

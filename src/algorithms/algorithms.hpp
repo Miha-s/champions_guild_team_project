@@ -34,6 +34,8 @@ SymbolsSet first_k( const Grammar& grammar,
                     Symbols::const_iterator it_begin,
                     Symbols::const_iterator it_end );
 
+void expand_rules_sequence( const Grammar& grammar, std::ostream& os, const SyntaxRules& rules );
+
 LocalResult local_k( const Grammar& grammar,
                      int k,
                      const SymbolPtr& from_symbol,

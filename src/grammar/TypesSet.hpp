@@ -69,7 +69,8 @@ public:
         InternalSet tmp_set;
         if ( m_internal_set.empty( ) )
         {
-            for ( const auto& other_sequence : other.m_internal_set ) {
+            for ( const auto& other_sequence : other.m_internal_set )
+            {
                 insert_k( tmp_set, other_sequence, k );
             }
             m_internal_set = tmp_set;
