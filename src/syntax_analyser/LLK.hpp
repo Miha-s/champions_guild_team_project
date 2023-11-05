@@ -25,6 +25,7 @@ class LLKAnalyser : public SyntaxAnalyser
     struct LLKTable
     {
         using LLKTableMap = std::unordered_map< Symbols, LLKTableElement, SymbolsHash >;
+        SymbolId id;
         LLKTableMap map;
     };
 
@@ -53,6 +54,12 @@ private:
     LLKTablePtr empty_table( ) const;
 
     size_t k;
+
+    friend std::ostream& operator<<( std::ostream& os, const LLKElement& el );
+    friend std::ostream& operator<<( std::ostream& os, const LLKTableElement& el );
+    friend std::ostream& operator<<( std::ostream& os, const LLKTable& table );
+    friend std::ostream& operator<<( std::ostream& os, const LLKTablePtr& table );
+
 };
 
 #endif  // LLK_H

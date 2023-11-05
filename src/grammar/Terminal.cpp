@@ -52,8 +52,12 @@ StringType
 Terminal::to_string( ) const
 {
     StringType str;
-    str = TerminalGroupStringMap[ group( ) ];
-    str.push_back( '_' );
+    if ( group( ) != TerminalGroup::t )
+    {
+        str = TerminalGroupStringMap[ group( ) ];
+        str.push_back( '_' );
+    }
+
     str.append( TerminalSubgroupStringMap[ subgroup( ) ] );
     return str;
 }

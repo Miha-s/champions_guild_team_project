@@ -17,10 +17,10 @@ std::ostream&
 operator<<( std::ostream& os, const Symbols& syms )
 {
     os << "(";
-    for ( const auto& sym : syms )
+    for ( auto it = syms.begin(); it != syms.end(); )
     {
-        os << sym;
-        if ( sym != syms.back( ) )
+        os << *it;
+        if ( ++it != syms.end( ) )
         {
             os << ", ";
         }
