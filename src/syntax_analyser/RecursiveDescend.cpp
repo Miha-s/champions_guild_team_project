@@ -44,7 +44,7 @@ RecursiveDescend::process_symbol( const SymbolPtr& sym, ParsingTable& table, Res
     SyntaxRulePtr found_rule;
     for ( const auto& rule : possible_rules )
     {
-        if ( rule.first == sym )
+        if ( rule.first == m_queue->peek_lexem() )
         {
             found_rule = rule.second;
             break;

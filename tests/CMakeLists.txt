@@ -10,6 +10,7 @@ add_executable(
         AlgorithmsTest
         algorithms/AlgorithmsTest.cpp
         parser/LL1Test.cpp
+        parser/RecursiveTest.cpp
 )
 
 
