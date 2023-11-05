@@ -2,9 +2,9 @@
 #define LL1_H
 #include <unordered_map>
 #include "algorithms/algorithms.hpp"
-#include "SyntaxAnalyser.hpp"
+#include "LL1Parsable.hpp"
 
-class LL1Analyser : public SyntaxAnalyser
+class LL1Analyser : public LL1Parsable
 {
     using ParsingTable =
             std::unordered_map< SymbolPtr, std::unordered_map< SymbolPtr, SyntaxRulePtr > >;
@@ -16,11 +16,7 @@ public:
     void process(  ) override;
 
 private:
-    ParsingTable create_parsing_table( );
     Result process_sequence( ParsingTable& table );
-    void set_failed_state( SymbolPtr expected, SymbolPtr real );
-    void set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
-                           SymbolPtr real );
 };
 
 #endif // LL1_H

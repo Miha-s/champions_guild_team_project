@@ -34,7 +34,7 @@ target_link_libraries(
         LL1Test
         parsing
         GTest::gtest_main
-)
+        )
 
 include(GoogleTest)
 
