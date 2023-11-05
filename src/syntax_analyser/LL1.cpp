@@ -73,5 +73,12 @@ LL1Analyser::process_sequence( ParsingTable& table )
             current_stack.pop();
         }
     }
+
+    if ( m_queue->size( ) > 1
+         || ( m_queue->size( ) == 1 && !m_queue->peek_lexem( )->is_epsilon( ) ) )
+    {
+        set_failed_state( m_grammar->epsilon( ), m_queue->peek_lexem( ) );
+    }
+
     return rules;
 }

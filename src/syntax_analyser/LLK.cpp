@@ -23,14 +23,17 @@ LLKAnalyser::process( )
 LLKAnalyser::LLKTablePtr
 LLKAnalyser::create_parsing_table( )
 {
+    Counter id_counter;
+
     std::deque< ParsingTableStackElement > parsing_queue;
     ParsingTableStackElement initial;
     initial.table = empty_table( );
+    initial.table->id = id_counter.get_next_id( );;
     initial.symbol = m_grammar->initial_symbol( );
     SymbolsSet l;
     l.insert( { m_grammar->epsilon( ) } );
     initial.l = l;
-    parsing_queue.push_back(initial);
+    parsing_queue.push_back( initial );
 
     std::vector< ParsingTableStackElement > parsed_tables;
     parsed_tables.push_back( initial );
@@ -43,6 +46,8 @@ LLKAnalyser::create_parsing_table( )
                                  return el.l == sym_set && el.symbol == sym;
                              } );
     };
+
+    ( *m_output ) << "Parsing tables: " << std::endl;
 
     bool updated = true;
     while ( updated )
@@ -69,8 +74,8 @@ LLKAnalyser::create_parsing_table( )
                     continue;
                 }
                 SymbolsSet l_next;
-                if (symbol_it + 1 != right_side.end())
-                    l_next = first_k( *m_grammar, k, symbol_it+1, right_side.end( ) );
+                if ( symbol_it + 1 != right_side.end( ) )
+                    l_next = first_k( *m_grammar, k, symbol_it + 1, right_side.end( ) );
                 l_next.add_k( parsing_table.l, k );
 
                 ParsingTableStackElement next_table;
@@ -88,6 +93,7 @@ LLKAnalyser::create_parsing_table( )
                 {
                     updated = true;
                     llk_element.table = next_table.table;
+                    llk_element.table->id = id_counter.get_next_id( );;
                     parsing_queue.push_back( next_table );
                     parsed_tables.push_back( next_table );
                 }
@@ -100,7 +106,8 @@ LLKAnalyser::create_parsing_table( )
                 parsing_table.table->map[ sequence ] = table_element;
             }
         }
-        parsing_queue.pop_front();
+        ( *m_output ) << parsing_table.table << std::endl;
+        parsing_queue.pop_front( );
     }
 
     return initial.table;
@@ -163,11 +170,18 @@ LLKAnalyser::process_sequence( LLKElement first_element )
                 table_element.elements.crend( ),
                 [ &processing_stack ]( const LLKElement& sym ) { processing_stack.push( sym ); } );
 
-        if ( processing_stack.size( ) > 1 && current_element.symbol
-             && current_element.symbol->is_epsilon( ) )
+        if ( processing_stack.size( ) > 1 && processing_stack.top( ).symbol
+             && processing_stack.top( ).symbol->is_epsilon( ) )
         {
             processing_stack.pop( );
         }
+    }
+
+    if ( current_symbols.size( ) > 1
+         || ( current_symbols.size( ) == 1 && !current_symbols.peek_lexem( )->is_epsilon( ) ) )
+    {
+        set_failed_state( m_grammar->epsilon( ),
+                          Symbols{ current_symbols.begin( ), current_symbols.end( ) } );
     }
 
     return rules;
@@ -179,6 +193,14 @@ LLKAnalyser::set_failed_state( SymbolPtr expected, SymbolPtr real )
     SymbolsSet expected_symbols;
     m_failed_state.expected.insert( { expected } );
     m_failed_state.real = { real };
+}
+
+void
+LLKAnalyser::set_failed_state( SymbolPtr expected, Symbols real )
+{
+    SymbolsSet expected_symbols;
+    m_failed_state.expected.insert( { expected } );
+    m_failed_state.real = real;
 }
 
 void
@@ -195,4 +217,55 @@ LLKAnalyser::LLKTablePtr
 LLKAnalyser::empty_table( ) const
 {
     return std::make_shared< LLKTable >( );
+}
+
+std::ostream&
+operator<<( std::ostream& os, const LLKAnalyser::LLKElement& el )
+{
+    if ( el.symbol )
+    {
+        os << el.symbol;
+    }
+    else
+    {
+        os << "T" << el.table->id;
+    }
+
+    return os;
+}
+
+std::ostream&
+operator<<( std::ostream& os, const LLKAnalyser::LLKTableElement& element )
+{
+    os << "(";
+
+    for ( auto it = element.elements.begin( ); it != element.elements.end( ); )
+    {
+        os << *it;
+        if ( ++it != element.elements.end( ) )
+        {
+            os << ", ";
+        }
+    }
+    os << "): " << element.syntax_rule;
+    return os;
+}
+
+std::ostream&
+operator<<( std::ostream& os, const LLKAnalyser::LLKTable& table )
+{
+    os << "T" << table.id << ": {" << std::endl;
+    for ( const auto& el : table.map )
+    {
+        os << "[" << el.first << " - " << el.second << "]" << std::endl;
+    }
+
+    os << "}";
+    return os;
+}
+
+std::ostream&
+operator<<( std::ostream& os, const LLKAnalyser::LLKTablePtr& table )
+{
+    return os << *table;
 }

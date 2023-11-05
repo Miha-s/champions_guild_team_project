@@ -61,10 +61,15 @@ struct TerminalHash
     action(RESERVED) \
     action(OPERATOR) \
     action(BRACKET) \
-    action(COMMENT)
+    action(COMMENT) \
+    action(t)
 
 #define EXPAND_VALUES_TERMINAL_SUBGROUP(action) \
     action(INVALID) \
+    action(a) \
+    action(b) \
+    action(c) \
+    action(d) \
     action(EPSILON) \
     action(DECIMAL) \
     action(FLOAT) \

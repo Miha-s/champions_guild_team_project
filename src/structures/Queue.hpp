@@ -10,6 +10,12 @@ class Queue
     using deque_t = std::deque<LexemType>;
 
 public:
+    Queue( );
+    template < typename... Args >
+    Queue( const Args&... args )
+        : deque( { args... } )
+    {
+    }
     void push_lexem( const LexemType& lexem );
     LexemType pop_lexem( );
     LexemType peek_lexem( ) const;
@@ -21,6 +27,13 @@ public:
 private:
     deque_t deque;
 };
+
+
+template < class LexemType >
+Queue< LexemType >::Queue( )
+{
+
+}
 
 template < class LexemType >
 void

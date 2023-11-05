@@ -13,6 +13,9 @@ RecursiveDescend::process( )
     auto table = create_parsing_table( );
     Result rules;
     bool success = process_symbol( m_grammar->initial_symbol( ), table, rules );
+    ( *m_output ) << std::endl;
+    ( *m_output ) << "Rules: \n" << rules;
+
     if ( m_queue->size( ) > 1 )
     {
         set_failed_state( m_grammar->epsilon( ), m_queue->peek_lexem( ) );
@@ -24,6 +27,7 @@ RecursiveDescend::process( )
 bool
 RecursiveDescend::process_symbol( const SymbolPtr& sym, ParsingTable& table, Result& rules )
 {
+    ( *m_output ) << sym << " -> ";
     if ( sym->is_epsilon( ) )
     {
         return true;
@@ -51,7 +55,7 @@ RecursiveDescend::process_symbol( const SymbolPtr& sym, ParsingTable& table, Res
         }
     }
 
-    if ( !found_rule )
+    if ( !found_rule->is_valid( ) )
     {
         set_failed_state( possible_rules, m_queue->peek_lexem( ) );
     }
@@ -59,7 +63,9 @@ RecursiveDescend::process_symbol( const SymbolPtr& sym, ParsingTable& table, Res
     rules.push_back( found_rule );
     for ( const auto& sym : found_rule->get_right_side( ) )
     {
+        ( *m_output ) << "(";
         bool ok = process_symbol( sym, table, rules );
+        ( *m_output ) << ")";
         if ( !ok )
         {
             return false;
