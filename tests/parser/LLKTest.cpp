@@ -38,7 +38,6 @@ TEST_F( LLKTest, test_of_k_parser )
     symbols_queue->push_lexem( a_terminal );
     symbols_queue->push_lexem( b_terminal );
     symbols_queue->push_lexem( a_terminal );
-    symbols_queue->push_lexem( a_terminal );
     symbols_queue->push_lexem( b_terminal );
     symbols_queue->push_lexem( b_terminal );
     symbols_queue->push_lexem( a_terminal );
