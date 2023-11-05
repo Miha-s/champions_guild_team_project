@@ -23,13 +23,14 @@ LLKAnalyser::process( )
 LLKAnalyser::LLKTablePtr
 LLKAnalyser::create_parsing_table( )
 {
-    std::stack< ParsingTableStackElement > parsing_stack;
+    std::deque< ParsingTableStackElement > parsing_queue;
     ParsingTableStackElement initial;
     initial.table = empty_table( );
     initial.symbol = m_grammar->initial_symbol( );
     SymbolsSet l;
     l.insert( { m_grammar->epsilon( ) } );
     initial.l = l;
+    parsing_queue.push_back(initial);
 
     std::vector< ParsingTableStackElement > parsed_tables;
     parsed_tables.push_back( initial );
@@ -46,7 +47,8 @@ LLKAnalyser::create_parsing_table( )
     bool updated = true;
     while ( updated )
     {
-        auto parsing_table = parsing_stack.top( );
+        updated = false;
+        auto parsing_table = parsing_queue.front( );
         for ( const auto& rule : m_grammar->syntax_rules_from_symbol( parsing_table.symbol ) )
         {
             auto u = first_k( *m_grammar, k, rule->get_right_side( ) );
@@ -66,8 +68,9 @@ LLKAnalyser::create_parsing_table( )
                     table_element.elements.push_back( llk_element );
                     continue;
                 }
-
-                auto l_next = first_k( *m_grammar, k, symbol_it++, right_side.end( ) );
+                SymbolsSet l_next;
+                if (symbol_it + 1 != right_side.end())
+                    l_next = first_k( *m_grammar, k, symbol_it+1, right_side.end( ) );
                 l_next.add_k( parsing_table.l, k );
 
                 ParsingTableStackElement next_table;
@@ -85,7 +88,7 @@ LLKAnalyser::create_parsing_table( )
                 {
                     updated = true;
                     llk_element.table = next_table.table;
-                    parsing_stack.push( next_table );
+                    parsing_queue.push_back( next_table );
                     parsed_tables.push_back( next_table );
                 }
 
@@ -97,6 +100,7 @@ LLKAnalyser::create_parsing_table( )
                 parsing_table.table->map[ sequence ] = table_element;
             }
         }
+        parsing_queue.pop_front();
     }
 
     return initial.table;
