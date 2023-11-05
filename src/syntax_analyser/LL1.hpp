@@ -6,9 +6,6 @@
 
 class LL1Analyser : public LL1Parsable
 {
-    using ParsingTable =
-            std::unordered_map< SymbolPtr, std::unordered_map< SymbolPtr, SyntaxRulePtr > >;
-
 public:
     // SymbolsQueuePtr must have epsilon at the end
     LL1Analyser( SymbolsQueuePtr symbols_queue, OutputStreamPtr output_stream, GrammarPtr grammar );

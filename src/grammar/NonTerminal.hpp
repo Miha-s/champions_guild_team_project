@@ -1,6 +1,7 @@
 #ifndef NONTERMINAL_HPP
 #define NONTERMINAL_HPP
 #include <vector>
+#include <unordered_map>
 
 #include "Symbol.hpp"
 #include "SymbolType.hpp"
@@ -17,6 +18,8 @@ public:
     NonTerminalType type( ) const;
 
     bool is_terminal( ) const override;
+
+    StringType to_string( ) const override;
 
     bool is_valid( ) const;
 
@@ -39,17 +42,22 @@ struct NonTerminalHash
     }
 };
 
+#define EXPAND_VALUES_NON_TERINAL_TYPE(action) \
+    action(INVALID) \
+    action(A) \
+    action(B) \
+    action(C) \
+    action(D) \
+    action(S)
+
 enum class NonTerminalType : SymbolId
 {
-    INVALID,
-    A,
-    B,
-    C,
-    D,
-    S
+    EXPAND_VALUES_NON_TERINAL_TYPE(EXPAND_ENUM)
 };
 
 using NonTerminalPtr = std::shared_ptr< const NonTerminal >;
 using NonTerminals = std::vector< NonTerminalPtr >;
+
+std::ostream& operator<<( std::ostream& os, const NonTerminalPtr& non_temrinal );
 
 #endif  // NONTERMINAL_HPP

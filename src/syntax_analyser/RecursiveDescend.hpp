@@ -7,9 +7,6 @@
 
 class RecursiveDescend : public LL1Parsable
 {
-    using ParsingTable =
-            std::unordered_map< SymbolPtr, std::unordered_map< SymbolPtr, SyntaxRulePtr > >;
-
 public:
     // SymbolsQueuePtr must have epsilon at the end
     RecursiveDescend( SymbolsQueuePtr symbols_queue, OutputStreamPtr output_stream, GrammarPtr grammar );

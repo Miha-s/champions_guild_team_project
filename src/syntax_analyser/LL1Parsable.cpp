@@ -14,6 +14,9 @@ LL1Parsable::ParsingTable LL1Parsable::create_parsing_table()
     auto firstSets = first_k( *m_grammar, k );
     auto followSets = follow_k( *m_grammar, k );
 
+    ( *m_output ) << "First1: \n" << firstSets << std::endl;
+    ( *m_output ) << "Follow1: \n" << followSets << std::endl;
+
     for ( const auto& rule : m_grammar->get_grammar_rules( ) )
     {
         SymbolsSet tmp_set;
@@ -62,8 +65,7 @@ LL1Parsable::set_failed_state( SymbolPtr expected, SymbolPtr real )
 }
 
 void
-LL1Parsable::set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
-                               SymbolPtr real )
+LL1Parsable::set_failed_state( const SymbolRuleMap& expected, SymbolPtr real )
 {
     SymbolsSet expected_symbols;
     for ( const auto& sym : expected )
@@ -75,4 +77,28 @@ LL1Parsable::set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePt
     }
 
     m_failed_state.real = { real };
+}
+
+std::ostream&
+operator<<( std::ostream& os, const SymbolRuleMap& table )
+{
+    os << "{";
+    for ( const auto& el : table )
+    {
+        os << el.first << ": " << el.second << "; ";
+    }
+    os << "}";
+    return os;
+}
+
+std::ostream&
+operator<<( std::ostream& os, const LL1Parsable::ParsingTable& table )
+{
+    os << "{" << std::endl;
+    for ( const auto& el : table )
+    {
+        os << "[" << el.first << ": " << el.second << "]" << std::endl;
+    }
+    os << "}";
+    return os;
 }

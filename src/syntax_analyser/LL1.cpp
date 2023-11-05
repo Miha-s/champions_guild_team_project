@@ -15,9 +15,10 @@ void
 LL1Analyser::process( )
 {
     auto table = create_parsing_table( );
+    ( *m_output ) << "ParsingTable: \n" << table << std::endl;
     m_result = process_sequence( table );
+    ( *m_output ) << "Result: \n" << m_result << std::endl;
 }
-
 
 LL1Analyser::Result
 LL1Analyser::process_sequence( ParsingTable& table )

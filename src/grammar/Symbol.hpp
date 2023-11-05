@@ -2,6 +2,7 @@
 #define SYMBOL_H
 #include <memory>
 #include <vector>
+#include <ostream>
 
 #include "enumeration.hpp"
 
@@ -48,6 +49,8 @@ public:
         return m_id == other.m_id;
     }
 
+    virtual StringType to_string( ) const = 0;
+
     virtual ~Symbol( )
     {
     }
@@ -88,5 +91,18 @@ struct SymbolsHash
         return seed;
     }
 };
+
+std::ostream&
+operator<<( std::ostream& os, const Symbol& sym );
+
+std::ostream&
+operator<<( std::ostream& os, const SymbolPtr& sym );
+
+std::ostream&
+operator<<( std::ostream& os, const Symbols& syms );
+
+#define EXPAND_ENUM( token ) token,
+#define EXPAND_ENUM_STRING_MAP(token, enum_type) {enum_type::token, #token},
+
 
 #endif  // SYMBOL_H

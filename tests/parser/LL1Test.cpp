@@ -12,14 +12,15 @@ protected:
     SetUp( ) override
     {
         symbols_queue = std::make_shared< SymbolsQueue >( );
-        auto dummy_output_stream = std::make_shared< std::ostringstream >( );
-        dummy_output = std::static_pointer_cast< std::ostream >( dummy_output_stream );
+        string_stream = std::make_shared< std::ostringstream >( );
+        dummy_output = std::static_pointer_cast< std::ostream >( string_stream );
         grammar = std::make_shared< Grammar >( );
     }
 
     std::shared_ptr< LL1Analyser > analyser;
     std::shared_ptr< Grammar > grammar;
     SymbolsQueuePtr symbols_queue;
+    std::shared_ptr< std::ostringstream > string_stream;
     OutputStreamPtr dummy_output;
 };
 
@@ -56,6 +57,8 @@ TEST_F( LL1Test, test_of_parser )
 
     analyser = std::make_shared< LL1Analyser >( symbols_queue, dummy_output, grammar );
     analyser->process( );
+
+    std::cout << string_stream->str( );
 
     auto result = analyser->get_result( );
     std::vector< int > actual_ids = { };
