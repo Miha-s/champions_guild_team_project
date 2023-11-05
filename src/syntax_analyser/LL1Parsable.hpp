@@ -6,8 +6,8 @@
 
 class LL1Parsable : public SyntaxAnalyser
 {
-    using ParsingTable =
-            std::unordered_map< SymbolPtr, std::unordered_map< SymbolPtr, SyntaxRulePtr > >;
+protected:
+    using ParsingTable = std::unordered_map< SymbolPtr, SymbolRuleMap >;
 
 public:
     // SymbolsQueuePtr must have epsilon at the end
@@ -18,8 +18,14 @@ protected:
     ParsingTable create_parsing_table( );
 
     void set_failed_state( SymbolPtr expected, SymbolPtr real );
-    void set_failed_state( const std::unordered_map< SymbolPtr, SyntaxRulePtr >& expected,
+    void set_failed_state( const SymbolRuleMap& expected,
                            SymbolPtr real );
+
+    friend std::ostream& operator<<( std::ostream& os, const ParsingTable& table );
 };
+
+std::ostream& operator<<( std::ostream& os, const SymbolRuleMap& table );
+
+std::ostream& operator<<( std::ostream& os, const LL1Parsable::ParsingTable& table );
 
 #endif  // LL1PARSABLE_HPP

@@ -1,5 +1,17 @@
 #include "Terminal.hpp"
 
+#define EXPAND_ENUM_TERMINAL_GROUP_STRING_MAP(token) EXPAND_ENUM_STRING_MAP(token, TerminalGroup)
+static std::unordered_map< TerminalGroup, StringType > TerminalGroupStringMap = {
+    EXPAND_VALUES_TERMINAL_GROUP( EXPAND_ENUM_TERMINAL_GROUP_STRING_MAP )
+};
+#undef EXPAND_ENUM_TERMINAL_GROUP_STRING_MAP
+
+#define EXPAND_ENUM_TERMINAL_SUBGROUP_STRING_MAP(token) EXPAND_ENUM_STRING_MAP(token, TerminalSubgroup)
+static std::unordered_map< TerminalSubgroup, StringType > TerminalSubgroupStringMap = {
+    EXPAND_VALUES_TERMINAL_SUBGROUP( EXPAND_ENUM_TERMINAL_SUBGROUP_STRING_MAP )
+};
+#undef EXPAND_ENUM_TERMINAL_SUBGROUP_STRING_MAP
+
 Terminal::Terminal( TerminalGroup group, TerminalSubgroup subgroup, SymbolId id )
     : Symbol{ id }
     , m_type{ group, subgroup }
@@ -34,6 +46,16 @@ TerminalSubgroup
 Terminal::subgroup( ) const
 {
     return m_type.sub_group;
+}
+
+StringType
+Terminal::to_string( ) const
+{
+    StringType str;
+    str = TerminalGroupStringMap[ group( ) ];
+    str.push_back( '_' );
+    str.append( TerminalSubgroupStringMap[ subgroup( ) ] );
+    return str;
 }
 
 bool

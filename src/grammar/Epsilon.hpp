@@ -11,6 +11,12 @@ public:
     {
         return true;
     }
+    StringType
+    to_string( ) const override
+    {
+        return "e";
+    }
+
 protected:
     friend class GrammarSymbols;
     Epsilon( )

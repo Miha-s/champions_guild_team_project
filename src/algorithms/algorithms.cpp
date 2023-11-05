@@ -2,8 +2,36 @@
 
 #include "vector"
 
+std::ostream&
+operator<<( std::ostream& os, const SymbolsSet& symbols_set )
+{
+    os << "{";
+    for ( auto it = symbols_set.begin( ); it != symbols_set.end( ); )
+    {
+        os << *it;
+        if ( ++it != symbols_set.end( ) )
+        {
+            os << ", ";
+        }
+    }
+    os << "}";
+    return os;
+}
+
+std::ostream&
+operator<<( std::ostream& os, const SymbolSymbolsMap& map )
+{
+    os << "{" << std::endl;
+    for ( const auto& el : map )
+    {
+        os << "(" << el.first << ": " << el.second << ")" << std::endl;
+    }
+    os << "}";
+    return os;
+}
+
 bool
-check_for_empty_set( const Symbols& symbols, const NonTerminalWithTerminals& map )
+check_for_empty_set( const Symbols& symbols, const SymbolSymbolsMap& map )
 {
     for ( const auto& symbol : symbols )
     {
@@ -15,10 +43,10 @@ check_for_empty_set( const Symbols& symbols, const NonTerminalWithTerminals& map
     return false;
 }
 
-NonTerminalWithTerminals
+SymbolSymbolsMap
 first_k( const Grammar& grammar, int k )
 {
-    NonTerminalWithTerminals firstSets;
+    SymbolSymbolsMap firstSets;
 
     for ( const auto& nonTerminal : grammar.get_non_terminals( ) )
     {
@@ -72,7 +100,7 @@ first_k( const Grammar& grammar, int k )
 SymbolsSet
 first_k( const Grammar& grammar, int k, const Symbols& symbols )
 {
-    NonTerminalWithTerminals firstSets = first_k( grammar, k );
+    SymbolSymbolsMap firstSets = first_k( grammar, k );
     SymbolsSet result;
     for ( const auto& symbol : symbols )
     {
@@ -84,7 +112,7 @@ first_k( const Grammar& grammar, int k, const Symbols& symbols )
 SymbolsSet
 first_k( const Grammar& grammar, int k, Symbols::const_iterator it_begin, Symbols::const_iterator it_end )
 {
-    NonTerminalWithTerminals firstSets = first_k( grammar, k );
+    SymbolSymbolsMap firstSets = first_k( grammar, k );
     SymbolsSet result;
     for ( ; it_begin != it_end; )
     {
@@ -95,11 +123,11 @@ first_k( const Grammar& grammar, int k, Symbols::const_iterator it_begin, Symbol
     return result;
 }
 
-NonTerminalWithTerminals
+SymbolSymbolsMap
 follow_k( const Grammar& grammar, int k )
 {
-    NonTerminalWithTerminals firstSets = first_k( grammar, k );
-    NonTerminalWithTerminals followSets;
+    SymbolSymbolsMap firstSets = first_k( grammar, k );
+    SymbolSymbolsMap followSets;
     for ( const auto& nonTerminal : grammar.get_non_terminals( ) )
     {
         followSets[ nonTerminal ] = { };

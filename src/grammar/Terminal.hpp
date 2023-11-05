@@ -2,6 +2,7 @@
 #define TERMINAL_HPP
 #include <unordered_set>
 #include <vector>
+#include <unordered_map>
 
 #include "Symbol.hpp"
 #include "SymbolType.hpp"
@@ -29,6 +30,8 @@ public:
 
     TerminalSubgroup subgroup( ) const;
 
+    StringType to_string( ) const override;
+
     bool is_valid( ) const;
 
     bool operator==( const Terminal& other ) const;
@@ -51,95 +54,101 @@ struct TerminalHash
     }
 };
 
+#define EXPAND_VALUES_TERMINAL_GROUP(action) \
+    action(INVALID) \
+    action(OTHER) \
+    action(NUMERIC) \
+    action(RESERVED) \
+    action(OPERATOR) \
+    action(BRACKET) \
+    action(COMMENT)
+
+#define EXPAND_VALUES_TERMINAL_SUBGROUP(action) \
+    action(INVALID) \
+    action(EPSILON) \
+    action(DECIMAL) \
+    action(FLOAT) \
+    action(HEX) \
+    action(BREAK) \
+    action(DEFAULT) \
+    action(FUNC) \
+    action(INTERFACE) \
+    action(SELECT) \
+    action(CASE) \
+    action(DEFER) \
+    action(GO) \
+    action(MAP) \
+    action(STRUCT) \
+    action(CHAN) \
+    action(ELSE) \
+    action(GOTO) \
+    action(PACKAGE) \
+    action(SWITCH) \
+    action(CONST) \
+    action(FALLTHROUGH) \
+    action(IF) \
+    action(RANGE) \
+    action(TYPE) \
+    action(CONTINUE) \
+    action(FOR) \
+    action(IMPORT) \
+    action(RETURN) \
+    action(VAR) \
+    action(IDENTIFIER) \
+    action(STRONG_NOT_EQUAL) \
+    action(STRONG_EQUAL) \
+    action(INCREMENT) \
+    action(DECREMENT) \
+    action(ADD_ASSIGN) \
+    action(SUB_ASSIGN) \
+    action(MUL_ASSIGN) \
+    action(DIV_ASSIGN) \
+    action(MOD_ASSIGN) \
+    action(EXP_ASSIGN) \
+    action(GREATER_EQUAL) \
+    action(LESS_EQUAL) \
+    action(LOGICAL_AND) \
+    action(LOGICAL_OR) \
+    action(LOGICAL_NOT) \
+    action(LEFT_SHIFT) \
+    action(RIGHT_SHIFT) \
+    action(PLUS) \
+    action(MINUS) \
+    action(DIVIDE) \
+    action(MULTIPLY) \
+    action(EXPONENT) \
+    action(ASSIGN) \
+    action(MODULUS) \
+    action(EQUAL) \
+    action(NOT_EQUAL) \
+    action(GREATER) \
+    action(LESS) \
+    action(AND) \
+    action(OR) \
+    action(NOT) \
+    action(POINT) \
+    action(ARROW) \
+    action(NEW_LINE) \
+    action(ROUND_LEFT) \
+    action(ROUND_RIGHT) \
+    action(SQUARE_LEFT) \
+    action(SQUARE_RIGHT) \
+    action(FIGURE_LEFT) \
+    action(FIGURE_RIGHT) \
+    action(SINGLE_QUOTE) \
+    action(DOUBLE_QUOTE) \
+    action(COLON) \
+    action(SEMICOLON) \
+    action(ONELINE)
+
 enum class TerminalGroup : SymbolId
 {
-    INVALID,
-    OTHER,
-    NUMERIC,
-    RESERVED,
-    OPERATOR,
-    BRACKET,
-    COMMENT
+    EXPAND_VALUES_TERMINAL_GROUP( EXPAND_ENUM )
 };
 
 enum class TerminalSubgroup : SymbolId
 {
-    INVALID,
-    EPSILON,
-    DECIMAL,
-    FLOAT,
-    HEX,
-    BREAK,
-    DEFAULT,
-    FUNC,
-    INTERFACE,
-    SELECT,
-    CASE,
-    DEFER,
-    GO,
-    MAP,
-    STRUCT,
-    CHAN,
-    ELSE,
-    GOTO,
-    PACKAGE,
-    SWITCH,
-    CONST,
-    FALLTHROUGH,
-    IF,
-    RANGE,
-    TYPE,
-    CONTINUE,
-    FOR,
-    IMPORT,
-    RETURN,
-    VAR,
-    IDENTIFIER,
-    STRONG_NOT_EQUAL,
-    STRONG_EQUAL,
-    INCREMENT,
-    DECREMENT,
-    ADD_ASSIGN,
-    SUB_ASSIGN,
-    MUL_ASSIGN,
-    DIV_ASSIGN,
-    MOD_ASSIGN,
-    EXP_ASSIGN,
-    GREATER_EQUAL,
-    LESS_EQUAL,
-    LOGICAL_AND,
-    LOGICAL_OR,
-    LOGICAL_NOT,
-    LEFT_SHIFT,
-    RIGHT_SHIFT,
-    PLUS,
-    MINUS,
-    DIVIDE,
-    MULTIPLY,
-    EXPONENT,
-    ASSIGN,
-    MODULUS,
-    EQUAL,
-    NOT_EQUAL,
-    GREATER,
-    LESS,
-    AND,
-    OR,
-    NOT,
-    POINT,
-    ARROW,
-    NEW_LINE,
-    ROUND_LEFT,
-    ROUND_RIGHT,
-    SQUARE_LEFT,
-    SQUARE_RIGHT,
-    FIGURE_LEFT,
-    FIGURE_RIGHT,
-    SINGLE_QUOTE,
-    DOUBLE_QUOTE,
-    COLON,
-    SEMICOLON,
-    ONELINE,
+    EXPAND_VALUES_TERMINAL_SUBGROUP( EXPAND_ENUM )
 };
 
 using TerminalPtr = std::shared_ptr< const Terminal >;

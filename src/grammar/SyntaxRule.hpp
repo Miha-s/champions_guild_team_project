@@ -17,50 +17,17 @@ public:
     {
     }
 
-    SymbolId
-    id( ) const
-    {
-        return m_id;
-    }
+    SymbolId id( ) const;
 
-    bool
-    is_valid( ) const
-    {
-        return m_id != INVALID_ID && m_left_side->is_valid( );
-    }
+    bool is_valid( ) const;
 
-    NonTerminalPtr
-    get_left_side( ) const
-    {
-        return this->m_left_side;
-    }
+    NonTerminalPtr get_left_side( ) const;
 
-    Symbols
-    get_right_side( ) const
-    {
-        return m_right_side;
-    }
+    Symbols get_right_side( ) const;
 
-    bool
-    contains( const SymbolPtr& symbol ) const
-    {
-        for ( const auto& item : m_right_side )
-        {
-            if ( item == symbol )
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    bool contains( const SymbolPtr& symbol ) const;
 
-    static std::shared_ptr< const SyntaxRule >
-    InvalidRule( )
-    {
-        static std::shared_ptr< const SyntaxRule > invalid_rule(
-                new SyntaxRule( INVALID_ID, NonTerminal::InvalidNonTerminal( ) ) );
-        return invalid_rule;
-    }
+    static std::shared_ptr< const SyntaxRule > InvalidRule( );
 
 private:
     SymbolId m_id = INVALID_ID;
@@ -68,7 +35,13 @@ private:
     Symbols m_right_side;
 };
 
+
 using SyntaxRulePtr = std::shared_ptr< const SyntaxRule >;
 using SyntaxRules = std::vector< SyntaxRulePtr >;
+using SymbolRuleMap = std::unordered_map< SymbolPtr, SyntaxRulePtr >;
+
+std::ostream& operator<<( std::ostream& os, const SyntaxRule& rule );
+std::ostream& operator<<( std::ostream& os, const SyntaxRulePtr& rule );
+std::ostream& operator<<( std::ostream& os, const SyntaxRules& rules );
 
 #endif  // SYNTAXRULE_H

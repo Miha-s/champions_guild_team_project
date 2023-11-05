@@ -22,12 +22,12 @@ struct SymbolsSetHash
     }
 };
 
-using NonTerminalWithTerminals = std::unordered_map< SymbolPtr, SymbolsSet >;
+using SymbolSymbolsMap = std::unordered_map< SymbolPtr, SymbolsSet >;
 
 using LocalResult = std::unordered_map< SymbolPtr, std::unordered_set< SymbolsSet, SymbolsSetHash > >;
 
-NonTerminalWithTerminals first_k( const Grammar& grammar, int k );
-NonTerminalWithTerminals follow_k( const Grammar& grammar, int k );
+SymbolSymbolsMap first_k( const Grammar& grammar, int k );
+SymbolSymbolsMap follow_k( const Grammar& grammar, int k );
 SymbolsSet first_k( const Grammar& grammar, int k, const Symbols& symbols );
 SymbolsSet first_k( const Grammar& grammar,
                     int k,
@@ -41,5 +41,8 @@ LocalResult local_k( const Grammar& grammar,
 
 NonTerminals epsilon_non_terminals( const Grammar& grammar );
 bool is_left_recursive( const Grammar& grammar, const NonTerminal& symbol );
+
+std::ostream& operator<<( std::ostream& os, const SymbolsSet& symbols_set );
+std::ostream& operator<<( std::ostream& os, const SymbolSymbolsMap& map );
 
 #endif  // ALGORITHMS_HPP
