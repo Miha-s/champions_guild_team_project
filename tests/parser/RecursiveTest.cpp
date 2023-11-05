@@ -3,9 +3,6 @@
 #include <lexer/FiniteAutomataLexer.hpp>
 #include <syntax_analyser/RecursiveDescend.hpp>
 
-#include "algorithms/algorithms.hpp"
-#include "syntax_analyser/LL1.hpp"
-
 class RecursiveTest : public testing::Test
 {
 protected:
