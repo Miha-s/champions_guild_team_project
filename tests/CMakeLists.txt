@@ -11,6 +11,7 @@ add_executable(
         algorithms/AlgorithmsTest.cpp
         parser/LL1Test.cpp
         parser/RecursiveTest.cpp
+        parser/LLKTest.cpp
 )
 
 
@@ -18,6 +19,11 @@ add_executable(
         LL1Test
         parser/LL1Test.cpp
         )
+
+add_executable(
+        LLKTest
+        parser/LLKTest.cpp
+)
 
 target_link_libraries(
         LexerTest
@@ -36,6 +42,12 @@ target_link_libraries(
         parsing
         GTest::gtest_main
         )
+
+target_link_libraries(
+        LLKTest
+        parsing
+        GTest::gtest_main
+)
 
 include(GoogleTest)
 
