@@ -170,11 +170,18 @@ LLKAnalyser::process_sequence( LLKElement first_element )
                 table_element.elements.crend( ),
                 [ &processing_stack ]( const LLKElement& sym ) { processing_stack.push( sym ); } );
 
-        if ( processing_stack.size( ) > 1 && current_element.symbol
-             && current_element.symbol->is_epsilon( ) )
+        if ( processing_stack.size( ) > 1 && processing_stack.top( ).symbol
+             && processing_stack.top( ).symbol->is_epsilon( ) )
         {
             processing_stack.pop( );
         }
+    }
+
+    if ( current_symbols.size( ) > 1
+         || ( current_symbols.size( ) == 1 && !current_symbols.peek_lexem( )->is_epsilon( ) ) )
+    {
+        set_failed_state( m_grammar->epsilon( ),
+                          Symbols{ current_symbols.begin( ), current_symbols.end( ) } );
     }
 
     return rules;
@@ -186,6 +193,14 @@ LLKAnalyser::set_failed_state( SymbolPtr expected, SymbolPtr real )
     SymbolsSet expected_symbols;
     m_failed_state.expected.insert( { expected } );
     m_failed_state.real = { real };
+}
+
+void
+LLKAnalyser::set_failed_state( SymbolPtr expected, Symbols real )
+{
+    SymbolsSet expected_symbols;
+    m_failed_state.expected.insert( { expected } );
+    m_failed_state.real = real;
 }
 
 void

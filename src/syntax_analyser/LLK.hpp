@@ -49,6 +49,7 @@ private:
     LLKTablePtr create_parsing_table( );
     Result process_sequence( LLKElement first_element );
     void set_failed_state( SymbolPtr expected, SymbolPtr real );
+    void set_failed_state( SymbolPtr expected, Symbols real );
     void set_failed_state( const LLKTablePtr& expected, Symbols real );
 
     LLKTablePtr empty_table( ) const;

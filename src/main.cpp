@@ -32,6 +32,8 @@ run_parser( GrammarPtr grammar, SymbolsQueuePtr queue, SyntaxAnalyserType type, 
         analysator = std::make_shared< RecursiveDescend >( queue, output, grammar );
     }
 
+    auto initial_sequence = Symbols( queue->begin( ), queue->end( ) );
+
     analysator->process( );
 
     std::cout << output_stream->str( );
@@ -40,9 +42,14 @@ run_parser( GrammarPtr grammar, SymbolsQueuePtr queue, SyntaxAnalyserType type, 
     expand_rules_sequence( *grammar, std::cout, analysator->get_result( ) );
 
     std::cout << std::endl;
+    std::cout << "Initial sequence: " << initial_sequence << std::endl << std::endl;
 
-    if ( analysator->successfully_parsed( ) )
+    if ( !analysator->successfully_parsed( ) )
     {
+        std::cout << "Failed to parse: " << std::endl;
+        std::cout << "Was expecting any of: " << analysator->get_failed_state( ).expected
+                  << std::endl;
+        std::cout << "Instead got: " << analysator->get_failed_state( ).real << std::endl;
     }
 }
 

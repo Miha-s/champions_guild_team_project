@@ -55,7 +55,7 @@ RecursiveDescend::process_symbol( const SymbolPtr& sym, ParsingTable& table, Res
         }
     }
 
-    if ( !found_rule )
+    if ( !found_rule->is_valid( ) )
     {
         set_failed_state( possible_rules, m_queue->peek_lexem( ) );
     }
