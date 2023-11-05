@@ -17,7 +17,7 @@ LLKAnalyser::process( )
     auto table = create_parsing_table( );
     LLKElement first_element;
     first_element.table = table;
-    process_sequence( first_element );
+    m_result = process_sequence( first_element );
 }
 
 LLKAnalyser::LLKTablePtr
@@ -129,6 +129,11 @@ LLKAnalyser::process_sequence( LLKElement first_element )
             if ( current_element.symbol == current_symbols.peek_lexem( ) )
             {
                 current_symbols.pop_lexem( );
+                if ( m_queue->size( ) )
+                {
+                    current_symbols.push_lexem( m_queue->peek_lexem( ) );
+                    m_queue->pop_lexem( );
+                }
                 processing_stack.pop( );
                 continue;
             }
@@ -146,6 +151,8 @@ LLKAnalyser::process_sequence( LLKElement first_element )
         }
 
         rules.push_back( table_element.syntax_rule );
+
+        processing_stack.pop( );
 
         std::for_each(
                 table_element.elements.crbegin( ),

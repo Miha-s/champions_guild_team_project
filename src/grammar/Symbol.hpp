@@ -33,7 +33,7 @@ public:
     bool
     is_non_terminal( ) const
     {
-        return !is_terminal( );
+        return !is_terminal( ) && !is_epsilon( );
     }
 
     bool
