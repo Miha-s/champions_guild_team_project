@@ -33,7 +33,7 @@ TEST_F( LLKTest, test_of_k_parser )
     NonTerminalPtr s = grammar->define( NonTerminalType::S );
     grammar->add_rule( s, a_terminal, b_terminal, a );
     grammar->add_rule( s, e );
-    grammar->add_rule( a, a, a_terminal, a_terminal );
+    grammar->add_rule( a, s, a_terminal, a_terminal );
     grammar->add_rule( a, b_terminal );
     symbols_queue->push_lexem( a_terminal );
     symbols_queue->push_lexem( b_terminal );

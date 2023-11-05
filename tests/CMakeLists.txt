@@ -12,6 +12,8 @@ add_executable(
         parser/LL1Test.cpp
         parser/RecursiveTest.cpp
         parser/LLKTest.cpp
+        parser/RecursiveTest.cpp
+        parser/RecursiveTest.h
 )
 
 
